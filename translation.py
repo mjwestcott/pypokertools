@@ -7,8 +7,8 @@ represented as AKs. Queen-Jack offsuit is QJo.
 Simple examples:
     "66" -> ["6c 6d", "6c 6h", "6c 6s", "6d 6h", "6d 6s", "6c 6d"]
     "AKs" -> ["Ac Kc", "Ad Kd", "Ah Kh", "As Ks"]
-    "QJo" -> ["Qc Jd", "Qd Jc", "Qh Jc", "Qs Jc"
-              "Qc Jh", "Qd Jh", "Qh Jd", "Qs Jd"
+    "QJo" -> ["Qc Jd", "Qd Jc", "Qh Jc", "Qs Jc",
+              "Qc Jh", "Qd Jh", "Qh Jd", "Qs Jd",
               "Qc Js", "Qd Js", "Qh Js", "Qs Jh"]
 
 The PokerStove format also includes range operators. For instance:

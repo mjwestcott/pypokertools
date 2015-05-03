@@ -34,7 +34,7 @@ from itertools import combinations
 # represent arbirary suits. One way to approach this is to specify a canonical
 # ordering of suits: that the left-most suit 'A' must be a club, 'B' must be a
 # diamond, and 'C' must be a heart. This _almost_ solves the problem elegantly;
-# two remaining edge cases are dealt with below
+# two remaining edge cases are dealt with below.
 
 
 def get_canonical(flop):
