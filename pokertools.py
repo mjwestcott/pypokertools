@@ -82,39 +82,19 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
 
 
 def get_numerical_rank(rank):
-    try:
+    trans = {"T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
+    if rank in trans:
+        return trans[rank]
+    else:
         return int(rank)
-    except ValueError:
-        if rank == 'T':
-            return 10
-        elif rank == 'J':
-            return 11
-        elif rank == 'Q':
-            return 12
-        elif rank == 'K':
-            return 13
-        elif rank == 'A':
-            return 14
-        else:
-            raise ValueError(rank)
 
 
 def get_string_rank(num_rank):
-    if 2 <= num_rank <= 9:
-        return str(num_rank)
+    trans = {10: "T", 11: "J", 12: "Q", 13: "K", 14: "A"}
+    if num_rank in trans:
+        return trans[num_rank]
     else:
-        if num_rank == 10:
-            return 'T'
-        elif num_rank == 11:
-            return 'J'
-        elif num_rank == 12:
-            return 'Q'
-        elif num_rank == 13:
-            return 'K'
-        elif num_rank == 14:
-            return 'A'
-        else:
-            raise ValueError(num_rank)
+        return str(num_rank)
 
 # ---- Creating the Containers --------------------------------------------
 
