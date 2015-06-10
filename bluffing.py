@@ -25,7 +25,8 @@ from collections import Counter
 from functools import wraps
 from itertools import chain
 
-# ---- Standard Hand Properties ----------------------------------------------
+#------------------------------------------------------------------------------
+# Standard Hand Properties
 
 
 def sorted_count_of_values(hand):
@@ -47,6 +48,7 @@ def sorted_count_of_values(hand):
 # Each function below finds standard poker hands. Each takes a list of five
 # pokertools.Card objects and returns a bool. They are doctested at the end of
 # the module
+
 
 def is_straightflush(hand):
     return is_flush(hand) and is_straight(hand)
@@ -90,8 +92,9 @@ def is_nopair(hand):
             and is_straight(hand) is False
             and is_flush(hand) is False)
 
-# ---- Complex Hand Propeties ------------------------------------------------
-
+#------------------------------------------------------------------------------
+# Complex Hand Propeties
+#
 # In this section it is important to keep track of our holecards.  As a
 # result, these functions accept two positional arguments:
 #     - holecards, a list of two cards
@@ -250,7 +253,8 @@ def is_3flush(holecards, flop, required_holecards=2):
                 raise ValueError("required_holecards must be an int from 0-2")
     return False
 
-# ---- Bluff Candidates ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Bluff Candidates
 
 
 @no_conflicts
@@ -289,8 +293,8 @@ def is_bluffcandidate(holecards, flop):
             and is_3flush(holecards, flop, required_holecards=2)
             and is_nopair(hand))
 
-# ---- doctests ------------------------------------------------------
-
+#------------------------------------------------------------------------------
+# doctests
 
 __doc__ += """
 >>> from pokertools import CARDS, HOLECARDS

@@ -25,8 +25,9 @@ current scenario, including our holecards.
 from pokertools import CARDS, SUITS
 from itertools import combinations
 
-# ---- Finding the canonical version -----------------------------------------
-
+#------------------------------------------------------------------------------
+# Finding the Canonical Version
+#
 # The position-isomorphic aspect of this problem is easy to solve: we can
 # simply specify that canonical flops must be sorted. The suit-isomorphic
 # aspect is a little more difficult. Suits may appear on the flop in five
@@ -110,7 +111,8 @@ def get_all_canonicals():
     all_possible_flops = combinations(CARDS.values(), r=3)
     return set([tuple(get_canonical(flop)) for flop in all_possible_flops])
 
-# ---- Suit-isomorphs ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Suit-Isomorphs
 
 
 def get_suit_isomorphs(flop):
@@ -182,7 +184,8 @@ def get_suit_isomorphs(flop):
                     and suit_2 != suit_3
                     and suit != suit_3)]
 
-# ---- Translation Dict ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Translation Dict
 
 
 def get_translation_dict(flop):
@@ -265,8 +268,8 @@ def get_translation_dict(flop):
             unused[0]: cano_unused[0]        # The remaining suits.
         }
 
-# ---- doctests ------------------------------------------------------
-
+#------------------------------------------------------------------------------
+# doctests
 
 __doc__ += """
 >>> flop = [CARDS['6s'], CARDS['8d'], CARDS['7c']]

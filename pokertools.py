@@ -7,7 +7,8 @@ namedtuple is used to represent cards.
 
 from collections import namedtuple
 
-# ---- Constants ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Constants
 
 
 SUITS = "cdhs"
@@ -28,7 +29,8 @@ HOLECARDS_NAMES = [CARD_NAMES[i] + " " + CARD_NAMES[j]
                    if i != j]
 NUM_HOLECARDS = 2652
 
-# ---- Classes ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Classes
 
 
 class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
@@ -78,8 +80,6 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
     def __repr__(self):
         return "<Card: {}>".format(self.name)
 
-# ---- Utility Functions -----------------------------------------------------
-
 
 def get_numerical_rank(rank):
     trans = {"T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
@@ -96,7 +96,8 @@ def get_string_rank(num_rank):
     else:
         return str(num_rank)
 
-# ---- Creating the Containers --------------------------------------------
+#------------------------------------------------------------------------------
+# Making the Containers
 
 
 def _make_cards_dict():
@@ -126,8 +127,8 @@ def _make_holecards_dict():
 # Usage example: HOLECARDS['Ah Jh']
 HOLECARDS = _make_holecards_dict()
 
-# ---- doctests ------------------------------------------------------
-
+#------------------------------------------------------------------------------
+# doctests
 
 __doc__ += """
 >>> CARDS['7c']

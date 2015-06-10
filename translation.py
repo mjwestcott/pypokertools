@@ -33,7 +33,8 @@ from pokertools import (SUITS, CARD_NAMES, NUM_CARDS,
                         get_numerical_rank, get_string_rank)
 
 
-# ---- Constants ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Constants
 
 
 SUIT_PERMS = list(permutations(SUITS, r=2))
@@ -47,7 +48,8 @@ CANONICAL_HOLECARDS_NAMES = [CARD_NAMES[i] + " " + CARD_NAMES[j]
                              for j in range(i+1, NUM_CARDS)]
 NUM_CANONICAL_HOLECARDS = len(CANONICAL_HOLECARDS_NAMES)
 
-# ---- Tokeniser ------------------------------------------------------
+#------------------------------------------------------------------------------
+# Tokeniser
 
 
 token_specification = [                                       # Examples:
@@ -188,7 +190,8 @@ def process_whole_string(text):
     all_holecards = list(chain.from_iterable(all_holecards))
     return [canonise(name) for name in all_holecards]
 
-# ---- doctests ------------------------------------------------------
+#------------------------------------------------------------------------------
+# doctests
 
 
 __doc__ += """
