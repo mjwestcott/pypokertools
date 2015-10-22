@@ -110,8 +110,7 @@ def no_conflicts(f):
     def wrapper(*args, **kwargs):
         cards = list(chain(*args))
         if len(set(cards)) != len(cards):
-            raise ValueError("Conflicting cards passed to "
-                             + f.__name__)
+            raise ValueError("Conflicting cards passed to {}".format(f.__name__))
         return f(*args, **kwargs)
     return wrapper
 
@@ -123,12 +122,10 @@ def five_cards(f):
     def wrapper(*args, **kwargs):
         cards = list(chain(*args))
         if len(cards) != 5:
-            raise ValueError("Exactly five cards must be passed to "
-                             + f.__name__)
+            raise ValueError("Exactly five cards must be passed to {}".format(f.__name__))
         for card in cards:
             if type(card) != pokertools.Card:
-                raise TypeError("Non-card: " + str(card) + " passed to "
-                                + f.__name__)
+                raise TypeError("Non-card: {} passed to {}".format(str(card), f.__name__))
         return f(*args, **kwargs)
     return wrapper
 
