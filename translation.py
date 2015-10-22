@@ -91,21 +91,16 @@ def process_one_name(stove_name):
         "AKs" -> ["Ac Kc", "Ad Kd", "Ah Kh", "As Ks"]
         "66" -> ["6c 6d", "6c 6h", "6c 6s", "6d 6h", "6d 6s", "6c 6d"]
     """
-    try:
+    if len(stove_name) == 3:
         rank1, rank2, suit_mark = stove_name
         if suit_mark == 's':
-            return [rank1 + suit + " " + rank2 + suit
-                    for suit in SUITS]
+            return [rank1 + suit + " " + rank2 + suit for suit in SUITS]
         elif suit_mark == 'o':
-            return [rank1 + suit1 + " " + rank2 + suit2
-                    for (suit1, suit2) in SUIT_PERMS]
-    except ValueError:
+            return [rank1 + suit1 + " " + rank2 + suit2 for (suit1, suit2) in SUIT_PERMS]
+    else:
         rank1, rank2 = stove_name
         if rank1 == rank2:
-            return [rank1 + suit1 + " " + rank2 + suit2
-                    for (suit1, suit2) in SUIT_COMBOS]
-        else:
-            raise ValueError(stove_name)
+            return [rank1 + suit1 + " " + rank2 + suit2 for (suit1, suit2) in SUIT_COMBOS]
 
 
 def process_one_token(token):
