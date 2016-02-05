@@ -1,4 +1,4 @@
-# A Note on Performance
+## A Note on Performance
 
 I was initially attracted to the alternative implementation of cards illustrated
 below:
