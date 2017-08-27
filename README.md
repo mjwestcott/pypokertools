@@ -1,4 +1,4 @@
-# PyPokertools
+# pypokertools
 
 ## The project
 
