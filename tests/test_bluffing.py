@@ -1,5 +1,3 @@
-import pytest
-
 from pokertools import CARDS, HOLECARDS, cards_from_str
 from examples.bluffing import (
     is_straightflush,

@@ -136,6 +136,22 @@ def _make_holecards_dict():
 CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
 
+
+#------------------------------------------------------------------------------
+# Utils
+
+
+def cards_from_str(names):
+    """
+    Given a string with space-separated card names, return
+    a list of Card objects representing a 5-card hand.
+
+    >>> hand('4h 5h 6h 7h 8h')
+    [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]]
+    """
+    return [CARDS[name] for name in names.split()]
+
+
 #------------------------------------------------------------------------------
 # doctests
 
