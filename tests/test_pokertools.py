@@ -25,6 +25,6 @@ def test_pokertools():
     assert CARDS['Ks'] > CARDS['Qh']
     assert CARDS['2d'] <= CARDS['3d']
 
-    AhJh = HOLECARDS['Ah 7c']
-    assert AhJh[0] == ace_hearts
-    assert AhJh[1] == seven_clubs
+    Ah7c = HOLECARDS['Ah 7c']
+    assert Ah7c[0] == ace_hearts
+    assert Ah7c[1] == seven_clubs
