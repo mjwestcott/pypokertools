@@ -24,7 +24,6 @@ Note: we will take position-isomorphs into account. "Ac Kc" is identical to
 "Kc Ac" and we only want to to produce one of them. This will simplify and
 reduce the space requirements of storing ranges of holecards.
 """
-
 # TODO: doctests should include real output, improve docstrings
 
 import re
@@ -217,20 +216,3 @@ def process_whole_string(text):
 
     all_holecards = list(chain.from_iterable(all_holecards))
     return [canonise(name) for name in all_holecards]
-
-#------------------------------------------------------------------------------
-# doctests
-
-
-__doc__ += """
->>> btn = (
-...     "22+, A2s+, K2s+, Q2s+, J6s+, T6s+, 96s+, 86s+, 75s+, 64s+, "
-...     "54s, A2o+, K9o+, Q9o+, J9o+, T8o+, 98o, 87o"
-... )
->>> len(process_whole_string(btn))
-586
-"""
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
