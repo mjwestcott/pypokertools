@@ -36,6 +36,11 @@ HOLECARDS_NAMES = [
     if c1 != c2
 ]
 
+# Dicts to translate ranks from str to int and vice versa
+STR_TO_NUM = dict(zip(RANKS, range(2, 15)))
+NUM_TO_STR = dict(zip(range(2, 15), RANKS))
+
+
 #------------------------------------------------------------------------------
 # Classes
 
@@ -89,20 +94,12 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
         return "<Card: {}>".format(self.name)
 
 
-def get_numerical_rank(rank):
-    trans = {"T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
-    if rank in trans:
-        return trans[rank]
-    else:
-        return int(rank)
+def get_numerical_rank(str_rank):
+    return STR_TO_NUM[str_rank]
 
 
 def get_string_rank(num_rank):
-    trans = {10: "T", 11: "J", 12: "Q", 13: "K", 14: "A"}
-    if num_rank in trans:
-        return trans[num_rank]
-    else:
-        return str(num_rank)
+    return NUM_TO_STR[num_rank]
 
 #------------------------------------------------------------------------------
 # Making the Containers
