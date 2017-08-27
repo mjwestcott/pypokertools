@@ -117,9 +117,6 @@ def get_all_canonicals():
     """
     Returns the set of all canonical flops. Each flop is a list of three
     pokertools.Card objects.
-
-    >>> len(get_all_canonicals())
-    1755
     """
     all_possible_flops = combinations(CARDS.values(), r=3)
     return set(tuple(get_canonical(flop)) for flop in all_possible_flops)
@@ -289,24 +286,3 @@ def get_translation_dict(flop):
             suit3: canon3,                   # suit of 3rd card = 3rd canon
             unused[0]: canonical_unused[0],  # The remaining suits.
         }
-
-#------------------------------------------------------------------------------
-# doctests
-
-__doc__ += """
->>> flop = [CARDS['6s'], CARDS['8d'], CARDS['7c']]
->>> get_canonical(flop)
-[<Card: 6c>, <Card: 7d>, <Card: 8h>]
->>> get_translation_dict(flop) == {'c': 'd', 'd': 'h', 'h': 's', 's': 'c'}
-True
-
->>> flop = [CARDS['Qs'], CARDS['Qd'], CARDS['4d']]
->>> get_canonical(flop)
-[<Card: 4c>, <Card: Qc>, <Card: Qd>]
->>> get_translation_dict(flop) == {'c': 'h', 'd': 'c', 'h': 's', 's': 'd'}
-True
-"""
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
