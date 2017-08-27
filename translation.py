@@ -1,4 +1,5 @@
-"""Translating PokerStove-style holecard notation to the 'individual cards'
+"""
+Translating PokerStove-style holecard notation to the 'individual cards'
 notation used for holecards in pokertools.py.
 
 In PokerStove notation (also used by PokerCruncher) Ace-King suited is
@@ -29,9 +30,14 @@ reduce the space requirements of storing ranges of holecards.
 import re
 from collections import namedtuple
 from itertools import combinations, permutations, chain
-from pokertools import (SUITS, CARD_NAMES, NUM_CARDS,
-                        get_numerical_rank, get_string_rank)
 
+from pokertools import (
+    SUITS,
+    CARD_NAMES,
+    NUM_CARDS,
+    get_numerical_rank,
+    get_string_rank
+)
 
 #------------------------------------------------------------------------------
 # Constants
@@ -43,9 +49,11 @@ SUIT_COMBOS = list(combinations(SUITS, r=2))
 # For the purpose of storing a range of holecards, position-isomorphs are
 # irrelevant; "Ah Kc" is the same as "Kc Ah". Thus we will use a smaller
 # version of the list found in pokertools.py
-CANONICAL_HOLECARDS_NAMES = [CARD_NAMES[i] + " " + CARD_NAMES[j]
-                             for i in range(NUM_CARDS)
-                             for j in range(i+1, NUM_CARDS)]
+CANONICAL_HOLECARDS_NAMES = {
+    "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
+    for i in range(NUM_CARDS)
+    for j in range(i+1, NUM_CARDS)
+}
 NUM_CANONICAL_HOLECARDS = len(CANONICAL_HOLECARDS_NAMES)
 
 #------------------------------------------------------------------------------
@@ -61,8 +69,7 @@ token_specification = [                                       # Examples:
     ('SEP',          r'\s*,\s*'),
     ('CATCHALL',     r'.+')
 ]
-master_pat = re.compile('|'.join('(?P<{}>{})'.format(*pair)
-                                 for pair in token_specification))
+master_pat = re.compile('|'.join('(?P<{}>{})'.format(*pair) for pair in token_specification))
 Token = namedtuple('Token', ['type', 'value'])
 
 
@@ -74,17 +81,19 @@ def generate_tokens(pattern, text):
 
 
 def canonise(holecards):
-    """Takes a single pair of cards and returns the canonical representation of
+    """
+    Takes a single pair of cards and returns the canonical representation of
     that pair according to CANONICAL_HOLECARDS_NAMES
     """
     if holecards in CANONICAL_HOLECARDS_NAMES:
         return holecards
     else:
-        return holecards[3:5] + " " + holecards[0:2]
+        return "{} {}".format(holecards[3:5], holecards[0:2])
 
 
 def process_one_name(stove_name):
-    """Translates a single PokerStove-style name of holecards into an
+    """
+    Translates a single PokerStove-style name of holecards into an
     expanded list of pokertools-style names.
 
     For example:
@@ -104,60 +113,61 @@ def process_one_name(stove_name):
 
 
 def process_one_token(token):
-    """Translates any given single token.
-
-    For example:
+    """
+    Translates any given single token. For example:
         "77-55" -> ["7c 7d", "7c 7h", "7c 7s", "7d 7h", "7d 7s", "7c 7d",
                     "6c 6d", "6c 6h", "6c 6s", "6d 6h", "6d 6s", "6c 6d",
                     "5c 5d", "5c 5h", "5c 5s", "5d 5h", "5d 5s", "5c 5d"]
     """
+    # Let's say token.value is "A5s-A2s". Our naming convention is this:
+    #   'A' is the 'const_rank'
+    #   '5' is the 'high_rank'
+    #   '2' is the 'low_rank'
+    #   's' is the 'suit_mark'
+
     if token.type == 'RANGE':
-        # Let's say token.value is "A5s-A2s". Our convention is this:
-        # 'A' is the 'const_rank'
-        # '5' is the 'high_rank'
-        # '2' is the 'low_rank'
-        # 's' is the 'suit_mark'
-        const_rank, high_rank, low_rank, suit_mark = \
-            token.value[0], token.value[1], token.value[5], token.value[2]
+        const_rank, high_rank, low_rank, suit_mark = token.value[0], token.value[1], token.value[5], token.value[2]
         high = get_numerical_rank(high_rank)
         low = get_numerical_rank(low_rank)
         # Produce a list such as ["A5s", "A4s", "A3s", "A2s"] for processing
-        names = [const_rank + get_string_rank(i) + suit_mark
-                 for i in range(high, (low - 1), -1)]
-        translated = [process_one_name(name) for name in names]
-        # We want a completely flattened list of holecards
-        return [new_name for new_name in chain.from_iterable(translated)]
+        names = [
+            "{}{}{}".format(const_rank, get_string_rank(i), suit_mark)
+            for i in range(high, (low - 1), -1)
+        ]
+        return list(chain.from_iterable(process_one_name(name) for name in names))
 
     elif token.type == 'RANGE_PAIR':
         high_rank, low_rank = token.value[1], token.value[3]
         high = get_numerical_rank(high_rank)
         low = get_numerical_rank(low_rank)
-        names = [get_string_rank(i)*2 for i in range(high, (low - 1), -1)]
-        translated = [process_one_name(name) for name in names]
-        return [new_name for new_name in chain.from_iterable(translated)]
+        # Produce a list such as ["77", "66", "55"] for processing
+        names = [
+            get_string_rank(i) * 2
+            for i in range(high, (low - 1), -1)
+        ]
+        return list(chain.from_iterable(process_one_name(name) for name in names))
 
     elif token.type == 'PAIR':
         if token.value.endswith("+"):
             # '55+' is equivalent to 'AA-55'
-            new_token = Token("RANGE_PAIR", "AA" + "-" + token.value[0:2])
-            return process_one_token(new_token)
+            return process_one_token(Token("RANGE_PAIR", "AA" + "-" + token.value[0:2]))
         else:
             return process_one_name(token.value)
 
     elif token.type == 'SINGLE_COMBO':
         card1, card2 = token.value[0:2], token.value[2:4]
-        return [card1 + " " + card2]
+        return ["{} {}".format(card1, card2)]
 
     elif token.type == 'MULTI_COMBO':
         if token.value.endswith("+"):
             # 'Q2s+' is equivalent to 'QJs-Q2s'
-            const_rank, low_rank, suit_mark = \
-                token.value[0], token.value[1], token.value[2]
+            const_rank, low_rank, suit_mark = token.value[0], token.value[1], token.value[2]
             const = get_numerical_rank(const_rank)
             high_rank = get_string_rank(const - 1)
-            new_token = Token("RANGE",
-                              const_rank + high_rank + suit_mark + "-"
-                              + const_rank + low_rank + suit_mark)
+            new_token = Token("RANGE", "{}{}{}-{}{}{}".format(
+                const_rank, high_rank, suit_mark,
+                const_rank, low_rank, suit_mark
+            ))
             return process_one_token(new_token)
         else:
             return process_one_name(token.value)
@@ -167,7 +177,8 @@ def process_one_token(token):
 
 
 def process_whole_string(text):
-    """Translates a string of PokerStove-style names of holecards into the
+    """
+    Translates a string of PokerStove-style names of holecards into the
     corresponding string of names from CANONICAL_HOLECARDS_NAMES.
 
     >>> stove_string = "JJ+, 66-22, A5s-A2s, Q9s+, J9s+, 8d7d, ATo+, KTo+"
@@ -176,7 +187,7 @@ def process_whole_string(text):
     """
     all_holecards = []
     tokens = list(generate_tokens(master_pat, text))
-    errors = [token for token in tokens if token.type == 'CATCHALL']
+    errors = [t for t in tokens if t.type == 'CATCHALL']
     if errors:
         raise ValueError(errors)
     for token in tokens:
@@ -190,8 +201,10 @@ def process_whole_string(text):
 
 
 __doc__ += """
->>> btn = ("22+, A2s+, K2s+, Q2s+, J6s+, T6s+, 96s+, 86s+, 75s+, 64s+, "
-...        "54s, A2o+, K9o+, Q9o+, J9o+, T8o+, 98o, 87o")
+>>> btn = (
+...     "22+, A2s+, K2s+, Q2s+, J6s+, T6s+, 96s+, 86s+, 75s+, 64s+, "
+...     "54s, A2o+, K9o+, Q9o+, J9o+, T8o+, 98o, 87o"
+... )
 >>> len(process_whole_string(btn))
 586
 """
