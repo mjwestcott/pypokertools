@@ -102,12 +102,8 @@ class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
 # Making the Containers
 
 
-def get_numerical_rank(str_rank):
-    return RANK_STR_TO_NUM[str_rank]
-
-
-def get_string_rank(num_rank):
-    return RANK_NUM_TO_STR[num_rank]
+get_string_rank = RANK_NUM_TO_STR.__getitem__
+get_numerical_rank = RANK_STR_TO_NUM.__getitem__
 
 
 def _make_cards_dict():
