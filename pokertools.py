@@ -1,4 +1,5 @@
-"""This module contains simple constants, classes and containers
+"""
+This module contains simple constants, classes and containers
 for working with playing cards in poker analysis.
 
 To create a convenient API for interactive analysis, a subclass of
@@ -36,7 +37,8 @@ NUM_HOLECARDS = 2652
 
 
 class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
-    """A playing card.
+    """
+    A playing card.
 
     Should be accessed via the CARDS container available in this module,
     which is a dictionary of pre-built Card objects.

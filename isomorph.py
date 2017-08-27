@@ -1,4 +1,5 @@
-"""Finding isomorphic/canonical representations of the flop.
+"""
+Finding isomorphic/canonical representations of the flop.
 
 In Texas Holdem suits have no intrinsic value. Thus, if the flop is "2d 3d 4d",
 the possible holecards "5c 6c", "5h 6h", and "5s 6s" are equivalent -- they are
