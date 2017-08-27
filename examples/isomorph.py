@@ -20,7 +20,6 @@ Finally, you will find a way to map the suits on the current flop to the suits
 on its canonical version. This will allow us to translate the rest of the
 current scenario, including our holecards.
 """
-
 # TODO: Think about the best way to scale to turn/river
 
 from itertools import combinations

@@ -5,7 +5,6 @@ for working with playing cards in poker analysis.
 To create a convenient API for interactive analysis, a subclass of
 namedtuple is used to represent cards.
 """
-
 from collections import namedtuple
 
 #------------------------------------------------------------------------------
