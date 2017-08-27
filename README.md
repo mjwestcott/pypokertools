@@ -34,13 +34,12 @@ In this library, the first two meanings are important to distinguish. I reserve
 ## TODO
 
 Some of the techniques in the above have been used to create an approximate
-Nash Equilibrium strategy solver for a simplified version of NLHE. More examples
-from that project will be released to this repository as the code is made fit
-for human consumption, including:
+Nash Equilibrium strategy solver for a simplified version of NLHE. One day I
+might release more code from that project, such as:
 
-- a tool to construct simplified NLHE game trees recursively using Networkx
+- a tool to construct simplified NLHE game trees recursively
 - an iterative constraint-satisfaction algorithm using NumPy to split ranges
 of holecards into e.g. betting and checking actions according to given criteria
 such as equity and polarity
 - a tool using the 'sklearn' machine learning framework to analyse hand
-history data to detect patterns and make predictions
+history data
