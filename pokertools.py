@@ -49,7 +49,7 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
     """
     A playing card.
 
-    Should be accessed via the CARDS container available in this module,
+    Should be accessed via the `CARDS` container available in this module,
     which is a dictionary of pre-built Card objects.
 
     Attributes:
@@ -94,6 +94,10 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
         return "<Card: {}>".format(self.name)
 
 
+#------------------------------------------------------------------------------
+# Making the Containers
+
+
 def get_numerical_rank(str_rank):
     return STR_TO_NUM[str_rank]
 
@@ -101,23 +105,16 @@ def get_numerical_rank(str_rank):
 def get_string_rank(num_rank):
     return NUM_TO_STR[num_rank]
 
-#------------------------------------------------------------------------------
-# Making the Containers
-
 
 def _make_cards_dict():
     ranks = [n[0] for n in CARD_NAMES]
     suits = [n[1] for n in CARD_NAMES]
     numerical_ranks = [get_numerical_rank(r) for r in ranks]
-    card_dict = {
+    return {
         name: Card(name, rank, suit, numerical_rank)
         for name, rank, suit, numerical_rank
         in zip(CARD_NAMES, ranks, suits, numerical_ranks)
     }
-    return card_dict
-
-# Accessible by string name, e.g. CARDS['As']
-CARDS = _make_cards_dict()
 
 
 # Holecards are simply pairs of cards.
@@ -128,14 +125,15 @@ def _make_holecards_dict():
         for y in CARD_NAMES
         if x != y
     ]
-    holecards_dict = {
+    return {
         name: holecards
         for name, holecards
         in zip(HOLECARDS_NAMES, holecards_list)
     }
-    return holecards_dict
 
-# Usage example: HOLECARDS['Ah Jh']
+# Accessible by string name, e.g.
+# CARDS['As'], HOLECARDS['Ah Jh']
+CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
 
 #------------------------------------------------------------------------------
