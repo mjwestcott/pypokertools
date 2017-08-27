@@ -173,7 +173,7 @@ def is_3straight(holecards, flop, required_holecards=2):
 
     def subseqs():
         for i in range(len(ranks) - 2):
-            yield ranks[i:i+3]
+            yield ranks[i:i + 3]
         a, b, _, _, c = ranks  # Special case for Ace playing low
         if [a, b, c] == [2, 3, 14]:
             yield [a, b, c]
