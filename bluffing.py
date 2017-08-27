@@ -71,10 +71,14 @@ def is_flush(hand):
 
 def is_straight(hand):
     numerical_ranks = sorted([card.numerical_rank for card in hand])
+
+    # Special case for Ace playing low
     if numerical_ranks == [2, 3, 4, 5, 14]:
         return True
-    return ((max(numerical_ranks) - min(numerical_ranks) == 4)
-            and sorted_count_of_values(hand) == [1, 1, 1, 1, 1])
+    return (
+        max(numerical_ranks) - min(numerical_ranks) == 4
+        and sorted_count_of_values(hand) == [1, 1, 1, 1, 1]
+    )
 
 
 def is_threeofakind(hand):
@@ -91,33 +95,21 @@ def is_onepair(hand):
 
 def is_nopair(hand):
     # 'No pair' means 'not(pair-or-better)'
-    return (sorted_count_of_values(hand) == [1, 1, 1, 1, 1]
-            and is_straight(hand) is False
-            and is_flush(hand) is False)
+    return (
+        sorted_count_of_values(hand) == [1, 1, 1, 1, 1]
+        and is_straight(hand) is False
+        and is_flush(hand) is False
+    )
 
 #------------------------------------------------------------------------------
 # Complex Hand Propeties
 #
-# In this section it is important to keep track of our holecards.  As a
+# In this section it is important to keep track of our holecards. As a
 # result, these functions accept two positional arguments:
 #     - holecards, a list of two cards
 #     - flop, a list of three cards
-# We can use decorators to ensure that these arguments, when flattened
+# We can use this decorator to ensure that these arguments, when flattened
 # by itertools.chain, comprise exactly five non-conflicting cards.
-
-
-def no_conflicts(f):
-    """
-    A decorator to check that a function is passed non-conflicting cards
-    in its positional arguments.
-    """
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        cards = list(chain(*args))
-        if len(set(cards)) != len(cards):
-            raise ValueError("Conflicting cards passed to {}".format(f.__name__))
-        return f(*args, **kwargs)
-    return wrapper
 
 
 def five_cards(f):
@@ -128,16 +120,15 @@ def five_cards(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         cards = list(chain(*args))
-        if len(cards) != 5:
+        n = len(cards)
+        if n != 5:
             raise ValueError("Exactly five cards must be passed to {}".format(f.__name__))
-        for card in cards:
-            if type(card) != pokertools.Card:
-                raise TypeError("Non-card: {} passed to {}".format(str(card), f.__name__))
+        if n != len(set(cards)):
+            raise ValueError("Conflicting cards passed to {}".format(f.__name__))
         return f(*args, **kwargs)
     return wrapper
 
 
-@no_conflicts
 @five_cards
 def is_3straight(holecards, flop, required_holecards=2):
     """
@@ -175,36 +166,36 @@ def is_3straight(holecards, flop, required_holecards=2):
         >>> is_3straight(my_holecards, flop)
         False
     """
+    assert 0 <= required_holecards <= 2
+
+    rank1, rank2 = [card.numerical_rank for card in holecards]
     hand = list(chain(holecards, flop))
-    numerical_ranks = sorted([card.numerical_rank for card in hand])
-    if numerical_ranks[4] == 14:
+    hand_ranks = sorted([card.numerical_rank for card in hand])
+
+    if hand_ranks[4] == 14:
         # If there's an ace in the hand, it can play high and low
         # for the purpose of making a 3straight, so we insert 1
         # at the leftmost position in the list.
-        numerical_ranks.insert(0, 1)
-    for i in range(len(numerical_ranks) - 2):
-        # For each three-length subsequence...
-        subseq = [numerical_ranks[i],
-                  numerical_ranks[i + 1],
-                  numerical_ranks[i + 2]]
+        hand_ranks.insert(0, 1)
+
+    # For each three-length subsequence...
+    for i in range(len(hand_ranks) - 2):
+        subseq = hand_ranks[i:i+3]
+
         # Check if it's a straight.
         if subseq[0] == subseq[1] - 1 == subseq[2] - 2:
-            card_1_rank = holecards[0].numerical_rank
-            card_2_rank = holecards[1].numerical_rank
+
             if required_holecards == 2:
-                if (card_1_rank in subseq and card_2_rank in subseq):
+                if (rank1 in subseq and rank2 in subseq):
                     return True
             elif required_holecards == 1:
-                if (card_1_rank in subseq or card_2_rank in subseq):
+                if (rank1 in subseq or rank2 in subseq):
                     return True
             elif required_holecards == 0:
                 return True
-            else:
-                raise ValueError("required_holecards must be an int from 0-2")
     return False
 
 
-@no_conflicts
 @five_cards
 def is_3flush(holecards, flop, required_holecards=2):
     """
@@ -241,29 +232,27 @@ def is_3flush(holecards, flop, required_holecards=2):
         >>> is_3flush(my_holecards, flop)
         False
     """
+    assert 0 <= required_holecards <= 2
+
+    suit1, suit2 = [card.suit for card in holecards]
     hand = list(chain(holecards, flop))
     suit_counts = Counter([card.suit for card in hand])
+
     for suit in suit_counts:
         if suit_counts[suit] == 3:
-            card_1_suit = holecards[0].suit
-            card_2_suit = holecards[1].suit
-            if required_holecards == 2:
-                if (card_1_suit == suit and card_2_suit == suit):
-                    return True
+            if required_holecards == 2 and (suit1 == suit2 == suit):
+                return True
             elif required_holecards == 1:
-                if (card_1_suit == suit or card_2_suit == suit):
+                if (suit1 == suit or suit2 == suit):
                     return True
             elif required_holecards == 0:
                 return True
-            else:
-                raise ValueError("required_holecards must be an int from 0-2")
     return False
 
 #------------------------------------------------------------------------------
 # Bluff Candidates
 
 
-@no_conflicts
 @five_cards
 def is_bluffcandidate(holecards, flop):
     """
@@ -296,9 +285,11 @@ def is_bluffcandidate(holecards, flop):
         False
     """
     hand = list(chain(holecards, flop))
-    return (is_3straight(holecards, flop, required_holecards=2)
-            and is_3flush(holecards, flop, required_holecards=2)
-            and is_nopair(hand))
+    return (
+        is_nopair(hand)
+        and is_3flush(holecards, flop, required_holecards=2)
+        and is_3straight(holecards, flop, required_holecards=2)
+    )
 
 #------------------------------------------------------------------------------
 # doctests
