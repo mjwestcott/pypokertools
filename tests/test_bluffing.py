@@ -12,9 +12,11 @@ from examples.bluffing import (
     is_3straight,
     is_3flush,
     is_bluffcandidate,
+    get_bluffcandidates,
 )
 
-hand = flop = holecards = cards_from_str
+hand = flop = cards_from_str
+holecards = HOLECARDS.get
 
 
 def test_is_straightflush():
@@ -106,3 +108,18 @@ def test_is_bluffcandidate():
     assert not is_bluffcandidate(holecards('2c 4h'), flop('Tc Jh Qd'))
     assert not is_bluffcandidate(holecards('2c Th'), flop('3c Jh Ad'))
     assert not is_bluffcandidate(holecards('Ac 3c'), flop('2c Jh Ad'))  # It's a pair
+
+
+def test_get_bluffcandidates():
+    assert set(get_bluffcandidates(flop('2s 4s Ac'))) == {
+        holecards('Qc Kc'),
+        holecards('5c 6c'),
+    }
+
+    # TODO: This returns no candidates because our hand has a pair.
+    # We should ignore pairs made without our holecards.
+    assert set(get_bluffcandidates(flop('2s 2s Ac'))) == set()
+
+    # TODO: This hand exist in the bluff candidate set, but actually
+    # it's an open-ended straight draw which makes it a semi-bluff.
+    assert holecards('5c 6c') in set(get_bluffcandidates(flop('4s 7s Ac')))

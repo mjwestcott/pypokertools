@@ -24,7 +24,7 @@ from collections import Counter
 from functools import wraps
 from itertools import chain
 
-import pokertools
+from pokertools import CANONICAL_HOLECARDS
 
 #------------------------------------------------------------------------------
 # Standard Hand Properties
@@ -111,6 +111,10 @@ def is_nopair(hand):
 # by itertools.chain, comprise exactly five non-conflicting cards.
 
 
+class ConflictingCards(Exception):
+    pass
+
+
 def five_cards(f):
     """
     A decorator to check that a function is passed exactly five cards
@@ -123,7 +127,7 @@ def five_cards(f):
         if n != 5:
             raise ValueError("Exactly five cards must be passed to {}".format(f.__name__))
         if n != len(set(cards)):
-            raise ValueError("Conflicting cards passed to {}".format(f.__name__))
+            raise ConflictingCards("Conflicting cards passed to {}: {}".format(f.__name__, cards))
         return f(*args, **kwargs)
     return wrapper
 
@@ -286,3 +290,12 @@ def is_bluffcandidate(holecards, flop):
         and is_3flush(holecards, flop, required_holecards=2)
         and is_3straight(holecards, flop, required_holecards=2)
     )
+
+
+def get_bluffcandidates(flop):
+    for holecards in CANONICAL_HOLECARDS.values():
+        try:
+            if is_bluffcandidate(holecards, flop):
+                yield holecards
+        except ConflictingCards:
+            pass

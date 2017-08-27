@@ -7,16 +7,11 @@ namedtuple is used to represent cards.
 """
 import random
 from collections import namedtuple
+from itertools import combinations, permutations
 
 #------------------------------------------------------------------------------
 # Constants
 
-
-# Note: there is some redundancy in HOLECARDS_NAMES below in that the list
-# contains both "Ah 2h" and "2h Ah". This is deliberate. This library was
-# designed to be used interactively and as such the convenience of accessing
-# holecards by either name is more important than efficiency. For a canonical
-# list of names see translation.py
 
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"
@@ -35,10 +30,19 @@ HOLECARDS_NAMES = [
     for c2 in CARD_NAMES
     if c1 != c2
 ]
+# Sometimes -- e.g. for the purpose of storing a range of holecards --
+# position-isomorphs are irrelevant; "Ah Kc" is the same as "Kc Ah"
+CANONICAL_HOLECARDS_NAMES = {
+    "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
+    for i in range(NUM_CARDS)
+    for j in range(i+1, NUM_CARDS)
+}
 
-# Dicts to translate ranks from str to int and vice versa
-STR_TO_NUM = dict(zip(RANKS, range(2, 15)))
-NUM_TO_STR = dict(zip(range(2, 15), RANKS))
+RANK_STR_TO_NUM = dict(zip(RANKS, range(2, 15)))
+RANK_NUM_TO_STR = dict(zip(range(2, 15), RANKS))
+
+SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
+SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
 
 
 #------------------------------------------------------------------------------
@@ -99,11 +103,11 @@ class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
 
 
 def get_numerical_rank(str_rank):
-    return STR_TO_NUM[str_rank]
+    return RANK_STR_TO_NUM[str_rank]
 
 
 def get_string_rank(num_rank):
-    return NUM_TO_STR[num_rank]
+    return RANK_NUM_TO_STR[num_rank]
 
 
 def _make_cards_dict():
@@ -131,10 +135,10 @@ def _make_holecards_dict():
         in zip(HOLECARDS_NAMES, holecards_list)
     }
 
-# Accessible by string name, e.g.
-# CARDS["As"], HOLECARDS["Ah Jh"]
+# Accessible by string name, e.g. CARDS["As"], HOLECARDS["Ah Jh"]
 CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
+CANONICAL_HOLECARDS = {k: HOLECARDS[k] for k in CANONICAL_HOLECARDS_NAMES}
 
 
 #------------------------------------------------------------------------------

@@ -28,33 +28,19 @@ reduce the space requirements of storing ranges of holecards.
 
 import re
 from collections import namedtuple
-from itertools import combinations, permutations, chain
+from itertools import chain
 
 from pokertools import (
-    SUITS,
     CARD_NAMES,
+    CANONICAL_HOLECARDS_NAMES,
     NUM_CARDS,
+    SUITS,
+    SUIT_PERMUATIONS,
+    SUIT_COMBINATIONS,
     get_numerical_rank,
     get_string_rank
 )
 
-
-#------------------------------------------------------------------------------
-# Constants
-
-
-SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
-SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
-
-# For the purpose of storing a range of holecards, position-isomorphs are
-# irrelevant; "Ah Kc" is the same as "Kc Ah". Thus we will use a smaller
-# version of the list found in pokertools.py
-CANONICAL_HOLECARDS_NAMES = {
-    "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
-    for i in range(NUM_CARDS)
-    for j in range(i+1, NUM_CARDS)
-}
-NUM_CANONICAL_HOLECARDS = len(CANONICAL_HOLECARDS_NAMES)
 
 #------------------------------------------------------------------------------
 # Tokeniser
