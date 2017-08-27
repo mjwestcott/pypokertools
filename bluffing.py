@@ -184,7 +184,6 @@ def is_3straight(holecards, flop, required_holecards=2):
 
         # Check if it's a straight.
         if subseq[0] == subseq[1] - 1 == subseq[2] - 2:
-
             if required_holecards == 2:
                 if (rank1 in subseq and rank2 in subseq):
                     return True
