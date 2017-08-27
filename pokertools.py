@@ -12,25 +12,29 @@ from collections import namedtuple
 # Constants
 
 
+# Note: there is some redundancy in HOLECARDS_NAMES below in that the list
+# contains both "Ah 2h" and "2h Ah". This is deliberate. This library was
+# designed to be used interactively and as such the convenience of accessing
+# holecards by either name is more important than efficiency. For a canonical
+# list of names see translation.py
+
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"
-CARD_NAMES = ["{}{}".format(r, s) for s in SUITS for r in RANKS]
 NUM_CARDS = 52
 
-# Note: there is some redundancy below in that the list contains both
-# "Ah 2h" and "2h Ah". This is deliberate. This library was designed to be
-# used interactively and as such the convenience of accessing holecards by
-# either name is more important than efficiency. For a canonical list of
-# names see translation.py
-#
-# A list of 2652 strings in the form ["2c 3c", "2c 4c", ..., "As Ks"].
-HOLECARDS_NAMES = [
-    "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
-    for i in range(NUM_CARDS)
-    for j in range(NUM_CARDS)
-    if i != j
+# A list of 52 strings in the form ["2c", "3c", 4c", ..., "As"]
+CARD_NAMES = [
+    "{}{}".format(r, s)
+    for s in SUITS
+    for r in RANKS
 ]
-NUM_HOLECARDS = 2652
+# A list of 2652 strings in the form ["2c 3c", "2c 4c", ..., "As Ks"]
+HOLECARDS_NAMES = [
+    "{} {}".format(c1, c2)
+    for c1 in CARD_NAMES
+    for c2 in CARD_NAMES
+    if c1 != c2
+]
 
 #------------------------------------------------------------------------------
 # Classes
