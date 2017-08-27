@@ -233,10 +233,10 @@ def get_translation_dict(flop):
 
     # if the flop matches the canonical version, no translation necessary
     if (suit1, suit2, suit3) == (canon1, canon2, canon3):
-        return {'c': 'c', 'd': 'd', 'h': 'h', 's': 's'}
+        return {"c": "c", "d": "d", "h": "h", "s": "s"}
 
-    unused = {'h', 'd', 'c', 's'} - {suit1, suit2, suit3}
-    canonical_unused = {'h', 'd', 'c', 's'} - {canon1, canon2, canon3}
+    unused = {"h", "d", "c", "s"} - {suit1, suit2, suit3}
+    canonical_unused = {"h", "d", "c", "s"} - {canon1, canon2, canon3}
     both_unused = unused & canonical_unused
 
     # listed for indexing the elements, sorted for deterministic output

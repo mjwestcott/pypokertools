@@ -67,10 +67,12 @@ token_specification = [                                       # Examples:
     ("PAIR",         r"([2-9AKQJT])\7\+?"),                   # 33
     ("SINGLE_COMBO", r"([2-9AKQJT][cdhs]){2}"),               # AhKh
     ("MULTI_COMBO",  r"[2-9AKQJT]{2}(s|o)\+?"),               # QJo
-    ("SEP",          r"\s*,\s*"),
+    ("SEPERATOR",    r"\s*,\s*"),
     ("CATCHALL",     r".+")
 ]
 master_pat = re.compile("|".join("(?P<{}>{})".format(*pair) for pair in token_specification))
+
+
 Token = namedtuple("Token", ["type", "value"])
 
 
@@ -210,7 +212,7 @@ def process_whole_string(text):
         raise TokeniserError("unexpected tokens: {}".format(errors))
 
     for token in tokens:
-        if token.type != "SEP":
+        if token.type != "SEPERATOR":
             all_holecards.append(process_one_token(token))
 
     all_holecards = list(chain.from_iterable(all_holecards))

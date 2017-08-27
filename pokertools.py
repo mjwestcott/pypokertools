@@ -45,7 +45,7 @@ NUM_TO_STR = dict(zip(range(2, 15), RANKS))
 # Classes
 
 
-class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
+class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
     """
     A playing card.
 
@@ -59,9 +59,9 @@ class Card(namedtuple('Card', ['name', 'rank', 'suit', 'numerical_rank'])):
         numerical_rank (int): Values 2-14; a numerical equivalent of its rank
 
     Examples:
-        >>> CARDS['As']
+        >>> CARDS["As"]
         <Card: As>
-        >>> CARDS['Jh'].numerical_rank
+        >>> CARDS["Jh"].numerical_rank
         11
     """
     __slots__ = ()
@@ -132,7 +132,7 @@ def _make_holecards_dict():
     }
 
 # Accessible by string name, e.g.
-# CARDS['As'], HOLECARDS['Ah Jh']
+# CARDS["As"], HOLECARDS["Ah Jh"]
 CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
 
