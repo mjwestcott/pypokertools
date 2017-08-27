@@ -39,12 +39,13 @@ from pokertools import (
     get_string_rank
 )
 
+
 #------------------------------------------------------------------------------
 # Constants
 
 
-SUIT_PERMS = list(permutations(SUITS, r=2))
-SUIT_COMBOS = list(combinations(SUITS, r=2))
+SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
+SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
 
 # For the purpose of storing a range of holecards, position-isomorphs are
 # irrelevant; "Ah Kc" is the same as "Kc Ah". Thus we will use a smaller
@@ -61,16 +62,20 @@ NUM_CANONICAL_HOLECARDS = len(CANONICAL_HOLECARDS_NAMES)
 
 
 token_specification = [                                       # Examples:
-    ('RANGE',        r'[2-9AKQJT]{2}(s|o)-[2-9AKQJT]{2}\2'),  # AKs-A2s
-    ('RANGE_PAIR',   r'([2-9AKQJT])\4-([2-9AKQJT])\5'),       # 99-55
-    ('PAIR',         r'([2-9AKQJT])\7\+?'),                   # 33
-    ('SINGLE_COMBO', r'([2-9AKQJT][cdhs]){2}'),               # AhKh
-    ('MULTI_COMBO',  r'[2-9AKQJT]{2}(s|o)\+?'),               # QJo
-    ('SEP',          r'\s*,\s*'),
-    ('CATCHALL',     r'.+')
+    ("RANGE",        r"[2-9AKQJT]{2}(s|o)-[2-9AKQJT]{2}\2"),  # AKs-A2s
+    ("RANGE_PAIR",   r"([2-9AKQJT])\4-([2-9AKQJT])\5"),       # 99-55
+    ("PAIR",         r"([2-9AKQJT])\7\+?"),                   # 33
+    ("SINGLE_COMBO", r"([2-9AKQJT][cdhs]){2}"),               # AhKh
+    ("MULTI_COMBO",  r"[2-9AKQJT]{2}(s|o)\+?"),               # QJo
+    ("SEP",          r"\s*,\s*"),
+    ("CATCHALL",     r".+")
 ]
-master_pat = re.compile('|'.join('(?P<{}>{})'.format(*pair) for pair in token_specification))
-Token = namedtuple('Token', ['type', 'value'])
+master_pat = re.compile("|".join("(?P<{}>{})".format(*pair) for pair in token_specification))
+Token = namedtuple("Token", ["type", "value"])
+
+
+class TokeniserError(Exception):
+    pass
 
 
 def generate_tokens(pattern, text):
@@ -102,14 +107,27 @@ def process_one_name(stove_name):
     """
     if len(stove_name) == 3:
         rank1, rank2, suit_mark = stove_name
-        if suit_mark == 's':
-            return [rank1 + suit + " " + rank2 + suit for suit in SUITS]
-        elif suit_mark == 'o':
-            return [rank1 + suit1 + " " + rank2 + suit2 for (suit1, suit2) in SUIT_PERMS]
+        if suit_mark == "s":
+            return [
+                "{}{} {}{}".format(rank1, suit, rank2, suit)
+                for suit in SUITS
+            ]
+        elif suit_mark == "o":
+            return [
+                "{}{} {}{}".format(rank1, suit1, rank2, suit1)
+                for (suit1, sui2) in SUIT_PERMUATIONS
+            ]
+        else:
+            raise TokeniserError("incorrect suit_mark in stove_name: {}".format(stove_name))
     else:
         rank1, rank2 = stove_name
         if rank1 == rank2:
-            return [rank1 + suit1 + " " + rank2 + suit2 for (suit1, suit2) in SUIT_COMBOS]
+            return [
+                "{}{} {}{}".format(rank1, suit1, rank2, suit1)
+                for (suit1, sui2) in SUIT_COMBINATIONS
+            ]
+        else:
+            raise TokeniserError("rank1 != rank2 in stove_name: {}".format(stove_name))
 
 
 def process_one_token(token):
@@ -125,7 +143,7 @@ def process_one_token(token):
     #   '2' is the 'low_rank'
     #   's' is the 'suit_mark'
 
-    if token.type == 'RANGE':
+    if token.type == "RANGE":
         const_rank, high_rank, low_rank, suit_mark = token.value[0], token.value[1], token.value[5], token.value[2]
         high = get_numerical_rank(high_rank)
         low = get_numerical_rank(low_rank)
@@ -136,7 +154,7 @@ def process_one_token(token):
         ]
         return list(chain.from_iterable(process_one_name(name) for name in names))
 
-    elif token.type == 'RANGE_PAIR':
+    elif token.type == "RANGE_PAIR":
         high_rank, low_rank = token.value[1], token.value[3]
         high = get_numerical_rank(high_rank)
         low = get_numerical_rank(low_rank)
@@ -147,18 +165,18 @@ def process_one_token(token):
         ]
         return list(chain.from_iterable(process_one_name(name) for name in names))
 
-    elif token.type == 'PAIR':
+    elif token.type == "PAIR":
         if token.value.endswith("+"):
             # '55+' is equivalent to 'AA-55'
             return process_one_token(Token("RANGE_PAIR", "AA" + "-" + token.value[0:2]))
         else:
             return process_one_name(token.value)
 
-    elif token.type == 'SINGLE_COMBO':
+    elif token.type == "SINGLE_COMBO":
         card1, card2 = token.value[0:2], token.value[2:4]
         return ["{} {}".format(card1, card2)]
 
-    elif token.type == 'MULTI_COMBO':
+    elif token.type == "MULTI_COMBO":
         if token.value.endswith("+"):
             # 'Q2s+' is equivalent to 'QJs-Q2s'
             const_rank, low_rank, suit_mark = token.value[0], token.value[1], token.value[2]
@@ -173,7 +191,7 @@ def process_one_token(token):
             return process_one_name(token.value)
 
     else:
-        raise ValueError(token)
+        raise TokeniserError("unexpected token: {}".format(token))
 
 
 def process_whole_string(text):
@@ -187,12 +205,14 @@ def process_whole_string(text):
     """
     all_holecards = []
     tokens = list(generate_tokens(master_pat, text))
-    errors = [t for t in tokens if t.type == 'CATCHALL']
+    errors = [t for t in tokens if t.type == "CATCHALL"]
     if errors:
-        raise ValueError(errors)
+        raise TokeniserError("unexpected tokens: {}".format(errors))
+
     for token in tokens:
         if token.type != "SEP":
             all_holecards.append(process_one_token(token))
+
     all_holecards = list(chain.from_iterable(all_holecards))
     return [canonise(name) for name in all_holecards]
 
