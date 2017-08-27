@@ -150,34 +150,3 @@ def cards_from_str(names):
     [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]
     """
     return [CARDS[name] for name in names.split()]
-
-
-#------------------------------------------------------------------------------
-# doctests
-
-__doc__ += """
->>> CARDS['7c']
-<Card: 7c>
->>> CARDS['Ah'].numerical_rank
-14
->>> CARDS[CARD_NAMES[0]]
-<Card: 2c>
->>> CARDS['Ks'] > CARDS['Qh']
-True
->>> CARDS['2d'] <= CARDS['3d']
-True
-
->>> HOLECARDS['Ah Jh']
-(<Card: Ah>, <Card: Jh>)
->>> HOLECARDS['Ah Jh'][0].numerical_rank
-14
->>> my_holecards = HOLECARDS[HOLECARDS_NAMES[999]]
->>> my_holecards
-(<Card: 8d>, <Card: 7h>)
->>> my_holecards[0].suit
-'d'
-"""
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
