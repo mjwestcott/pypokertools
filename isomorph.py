@@ -23,8 +23,9 @@ current scenario, including our holecards.
 
 # TODO: Think about the best way to scale to turn/river
 
-from pokertools import CARDS, SUITS
 from itertools import combinations
+
+from pokertools import CARDS, SUITS
 
 #------------------------------------------------------------------------------
 # Finding the Canonical Version

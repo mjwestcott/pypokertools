@@ -1,4 +1,5 @@
-"""What properties does my hand have on the flop?
+"""
+What properties does my hand have on the flop?
 
 Poker analysis libraries commonly classify five-card poker hands according to a
 scheme which allows two hands to be compared at showdown; they can find whether
@@ -20,17 +21,19 @@ properties:
 Expert poker players will recognise these as good candidates to use as bluffs.
 """
 
-import pokertools
 from collections import Counter
 from functools import wraps
 from itertools import chain
+
+import pokertools
 
 #------------------------------------------------------------------------------
 # Standard Hand Properties
 
 
 def sorted_count_of_values(hand):
-    """Takes a list of five pokertools.Card objects and returns a sorted
+    """
+    Takes a list of five pokertools.Card objects and returns a sorted
     list of counts of the card ranks.
 
     For example, consider this hand:
@@ -104,8 +107,10 @@ def is_nopair(hand):
 
 
 def no_conflicts(f):
-    """A decorator to check that a function is passed non-conflicting cards
-    in its positional arguments."""
+    """
+    A decorator to check that a function is passed non-conflicting cards
+    in its positional arguments.
+    """
     @wraps(f)
     def wrapper(*args, **kwargs):
         cards = list(chain(*args))
@@ -116,8 +121,10 @@ def no_conflicts(f):
 
 
 def five_cards(f):
-    """A decorator to check that a function is passed exactly five cards
-    in its positional arguments."""
+    """
+    A decorator to check that a function is passed exactly five cards
+    in its positional arguments.
+    """
     @wraps(f)
     def wrapper(*args, **kwargs):
         cards = list(chain(*args))
@@ -133,7 +140,8 @@ def five_cards(f):
 @no_conflicts
 @five_cards
 def is_3straight(holecards, flop, required_holecards=2):
-    """Returns a bool indicating whether our holecards have three-to-a-straight
+    """
+    Returns a bool indicating whether our holecards have three-to-a-straight
     on this flop. Three-to-a-straight means that there exists a combination of
     three of the five total cards that is consecutive in rank.
 
@@ -199,7 +207,8 @@ def is_3straight(holecards, flop, required_holecards=2):
 @no_conflicts
 @five_cards
 def is_3flush(holecards, flop, required_holecards=2):
-    """Returns a bool indicating whether our holecards have three-to-a-flush
+    """
+    Returns a bool indicating whether our holecards have three-to-a-flush
     on this flop. Three-to-a-flush means that there exists a combination of
     three of the five total cards which have the same suit.
 
@@ -257,7 +266,8 @@ def is_3flush(holecards, flop, required_holecards=2):
 @no_conflicts
 @five_cards
 def is_bluffcandidate(holecards, flop):
-    """Returns a bool indicating whether our holecards are a good
+    """
+    Returns a bool indicating whether our holecards are a good
     candidate for bluffing.
 
     Checks whether our hand has three properties:
