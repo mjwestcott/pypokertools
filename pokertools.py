@@ -146,8 +146,8 @@ def cards_from_str(names):
     Given a string with space-separated card names, return
     a list of Card objects representing a 5-card hand.
 
-    >>> hand('4h 5h 6h 7h 8h')
-    [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]]
+    >>> cards_from_str('4h 5h 6h 7h 8h')
+    [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]
     """
     return [CARDS[name] for name in names.split()]
 
@@ -171,8 +171,6 @@ True
 (<Card: Ah>, <Card: Jh>)
 >>> HOLECARDS['Ah Jh'][0].numerical_rank
 14
->>> type(HOLECARDS['2c 3c'])
-<type 'tuple'>
 >>> my_holecards = HOLECARDS[HOLECARDS_NAMES[999]]
 >>> my_holecards
 (<Card: 8d>, <Card: 7h>)
