@@ -5,6 +5,7 @@ for working with playing cards in poker analysis.
 To create a convenient API for interactive analysis, a subclass of
 namedtuple is used to represent cards.
 """
+import random
 from collections import namedtuple
 
 #------------------------------------------------------------------------------
@@ -138,6 +139,18 @@ HOLECARDS = _make_holecards_dict()
 
 #------------------------------------------------------------------------------
 # Utils
+
+
+def make_deck():
+    cards = list(CARDS.values())
+    random.shuffle(cards)
+    return cards
+
+
+def deal(deck, n=1):
+    if n == 1:
+        return deck.pop()
+    return tuple(deck.pop() for _ in range(n))
 
 
 def cards_from_str(names):

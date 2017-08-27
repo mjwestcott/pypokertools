@@ -3,6 +3,8 @@ from pokertools import (
     CARD_NAMES,
     HOLECARDS,
     HOLECARDS_NAMES,
+    make_deck,
+    deal,
 )
 
 
@@ -28,3 +30,14 @@ def test_pokertools():
     Ah7c = HOLECARDS['Ah 7c']
     assert Ah7c[0] == ace_hearts
     assert Ah7c[1] == seven_clubs
+
+    deck = make_deck()
+    assert len(deck) == 52
+
+    holecards = deal(deck, n=2)
+    assert len(holecards) == 2
+    assert len(deck) == 50
+
+    flop = deal(deck, n=3)
+    assert len(flop) == 3
+    assert len(deck) == 47
