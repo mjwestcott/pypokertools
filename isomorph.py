@@ -40,7 +40,8 @@ from itertools import combinations
 
 
 def get_canonical(flop):
-    """Returns the canonical version of the given flop.
+    """
+    Returns the canonical version of the given flop.
 
     Canonical flops are sorted. The first suit is 'c' and, if applicable,
     the second is 'd' and the third is 'h'.
@@ -56,34 +57,41 @@ def get_canonical(flop):
     >>> get_canonical(flop)
     [<Card: 2c>, <Card: 3d>, <Card: Kd>]
     """
+    card1, card2, card3 = sorted(flop)
+    A, B, C = "cdh"
 
-    flop = sorted(flop)
-    card1, card2, card3 = flop[0], flop[1], flop[2]
+    if card1.suit == card2.suit == card3.suit:
+        return [
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + A],
+            CARDS[card3.rank + A],
+        ]
 
-    if card1.suit == card2.suit == card3.suit:    # suit pattern
-        return [CARDS[card1.rank + 'c'],          # <-- A
-                CARDS[card2.rank + 'c'],          # <-- A
-                CARDS[card3.rank + 'c']]          # <-- A
+    elif card1.suit == card2.suit != card3.suit:
+        return [
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + A],
+            CARDS[card3.rank + B],
+        ]
 
-    elif card1.suit == card2.suit != card3.suit:  # suit pattern
-        return [CARDS[card1.rank + 'c'],          # <-- A
-                CARDS[card2.rank + 'c'],          # <-- A
-                CARDS[card3.rank + 'd']]          # <-- B
-
-    elif card1.suit == card3.suit != card2.suit:  # suit pattern
-        canonical = [CARDS[card1.rank + 'c'],     # <-- A
-                     CARDS[card2.rank + 'd'],     # <-- B
-                     CARDS[card3.rank + 'c']]     # <-- A
+    elif card1.suit == card3.suit != card2.suit:
+        canonical = [
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + B],
+            CARDS[card3.rank + A],
+        ]
 
         # Special case: if the 2nd and 3rd cards are a pair e.g. the flop is
         # [Jc, Qd, Qc], then our suit changes have resulted in an
         # unsorted flop! The correct canonical form is [Jc, Qc, Qd].
         return sorted(canonical)
 
-    elif card1.suit != card2.suit == card3.suit:  # suit pattern
-        canonical = [CARDS[card1.rank + 'c'],     # <-- A
-                     CARDS[card2.rank + 'd'],     # <-- B
-                     CARDS[card3.rank + 'd']]     # <-- B
+    elif card1.suit != card2.suit == card3.suit:
+        canonical = [
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + B],
+            CARDS[card3.rank + B],
+        ]
 
         # Special case: if the 1st and 2nd cards are a pair e.g. flop is
         # [2c, 2d, 8d], that is isomorphic with those cards being switched
@@ -93,31 +101,35 @@ def get_canonical(flop):
         # clubs! To make this change we can simply change the suit of the
         # third card to 'c'.
         if canonical[0].rank == canonical[1].rank:
-            canonical[2] = CARDS[card3.rank + 'c']
+            canonical[2] = CARDS[card3.rank + A]
         return canonical
 
-    elif card1.suit != card2.suit != card3.suit:  # suit pattern
-        return [CARDS[card1.rank + 'c'],          # <-- A
-                CARDS[card2.rank + 'd'],          # <-- B
-                CARDS[card3.rank + 'h']]          # <-- C
+    elif card1.suit != card2.suit != card3.suit:
+        return [
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + B],
+            CARDS[card3.rank + C],
+        ]
 
 
 def get_all_canonicals():
-    """Returns the set of all canonical flops. Each flop is a list of three
+    """
+    Returns the set of all canonical flops. Each flop is a list of three
     pokertools.Card objects.
 
     >>> len(get_all_canonicals())
     1755
     """
     all_possible_flops = combinations(CARDS.values(), r=3)
-    return set([tuple(get_canonical(flop)) for flop in all_possible_flops])
+    return set(tuple(get_canonical(flop)) for flop in all_possible_flops)
 
 #------------------------------------------------------------------------------
 # Suit-Isomorphs
 
 
 def get_suit_isomorphs(flop):
-    """Returns a list of all suit-isomorphic combinations of the flop. Each
+    """
+    Returns a list of all suit-isomorphic combinations of the flop. Each
     flop is a list of three pokertools.Card objects.
 
     >>> flop = [CARDS['As'], CARDS['4s'], CARDS['Ts']]
@@ -132,65 +144,75 @@ def get_suit_isomorphs(flop):
     >>> len(get_suit_isomorphs(flop))
     24
     """
-
-    card1, card2, card3 = flop[0], flop[1], flop[2]
+    card1, card2, card3 = flop
 
     if card1.suit == card2.suit == card3.suit:
         # For each suit, produce the suit pattern 'AAA'
-        return [[CARDS[card1.rank + suit],        # <-- A
-                 CARDS[card2.rank + suit],        # <-- A
-                 CARDS[card3.rank + suit]]        # <-- A
-                for suit in SUITS]
+        return [
+            [
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + A],
+                CARDS[card3.rank + A],
+            ]
+            for A in SUITS
+        ]
 
     elif card1.suit == card2.suit != card3.suit:
         # For each combination of two non-identical
         # suits, produce the suit pattern 'AAB'
-        return [[CARDS[card1.rank + suit],        # <-- A
-                 CARDS[card2.rank + suit],        # <-- A
-                 CARDS[card3.rank + suit_2]]      # <-- B
-                for suit in SUITS
-                for suit_2 in SUITS
-                if suit != suit_2]
+        return [
+            [
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + A],
+                CARDS[card3.rank + B],
+            ]
+            for A in SUITS for B in SUITS if A != B
+        ]
 
     elif card1.suit != card2.suit == card3.suit:
         # For each combination of two non-identical
         # suits, produce the suit pattern 'ABB'
-        return [[CARDS[card1.rank + suit],        # <-- A
-                 CARDS[card2.rank + suit_2],      # <-- B
-                 CARDS[card3.rank + suit_2]]      # <-- B
-                for suit in SUITS
-                for suit_2 in SUITS
-                if suit != suit_2]
+        return [
+            [
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + B],
+                CARDS[card3.rank + B],
+            ]
+            for A in SUITS for B in SUITS if A != B
+        ]
 
     elif card1.suit == card3.suit != card2.suit:
         # For each combination of two non-identical
         # suits, produce the suit pattern 'ABA'
-        return [[CARDS[card1.rank + suit],        # <-- A
-                 CARDS[card2.rank + suit_2],      # <-- B
-                 CARDS[card3.rank + suit]]        # <-- A
-                for suit in SUITS
-                for suit_2 in SUITS
-                if suit != suit_2]
+        return [
+            [
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + B],
+                CARDS[card3.rank + A],
+            ]
+            for A in SUITS for B in SUITS if A != B
+        ]
 
     elif card1.suit != card2.suit != card3.suit:
         # For each combination of three non-identical
         # suits, produce the suit pattern 'ABC'
-        return [[CARDS[card1.rank + suit],        # <-- A
-                 CARDS[card2.rank + suit_2],      # <-- B
-                 CARDS[card3.rank + suit_3]]      # <-- C
-                for suit in SUITS
-                for suit_2 in SUITS
-                for suit_3 in SUITS
-                if (suit != suit_2
-                    and suit_2 != suit_3
-                    and suit != suit_3)]
+        return [
+            [
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + B],
+                CARDS[card3.rank + C],
+            ]
+            for A in SUITS for B in SUITS for C in SUITS
+            if (A != B and B != C and A != C)
+        ]
 
 #------------------------------------------------------------------------------
 # Translation Dict
 
 
 def get_translation_dict(flop):
-    """Returns a dict which maps suits to other suits. The keys represent the
+    """
+    Returns a dict which maps suits to other suits. The keys represent the
     suits on the given flop. The values represent the suits on the canonical
     version. This tell us what the 'translation' is between them, allowing us
     to translate the suits of our holecards.
@@ -203,70 +225,68 @@ def get_translation_dict(flop):
     """
 
     flop = sorted(flop)
-    suit1, suit2, suit3 = (flop[0].suit, flop[1].suit, flop[2].suit)
+    suit1, suit2, suit3 = [card.suit for card in flop]
 
-    cano_flop = get_canonical(flop)
-    cano_suit1, cano_suit2, cano_suit3 = (
-        cano_flop[0].suit, cano_flop[1].suit, cano_flop[2].suit)
+    canonical_flop = get_canonical(flop)
+    canon1, canon2, canon3 = [card.suit for card in canonical_flop]
 
     # if the flop matches the canonical version, no translation necessary
-    if (suit1, suit2, suit3) == (cano_suit1, cano_suit2, cano_suit3):
+    if (suit1, suit2, suit3) == (canon1, canon2, canon3):
         return {'c': 'c', 'd': 'd', 'h': 'h', 's': 's'}
 
     unused = {'h', 'd', 'c', 's'} - {suit1, suit2, suit3}
-    cano_unused = {'h', 'd', 'c', 's'} - {cano_suit1, cano_suit2, cano_suit3}
-    both_unused = unused & cano_unused
+    canonical_unused = {'h', 'd', 'c', 's'} - {canon1, canon2, canon3}
+    both_unused = unused & canonical_unused
 
-    # listed for indexing the elements,
-    # sorted for deterministic output
+    # listed for indexing the elements, sorted for deterministic output
     unused = sorted(list(unused))
-    cano_unused = sorted(list(cano_unused))
+    canonical_unused = sorted(list(canonical_unused))
     both_unused = sorted(list(both_unused))
 
     if suit1 == suit2 == suit3:
         # suit pattern is 'AAA'
         return {
-            suit1: cano_suit1,               # The first flop suit and the
-            cano_suit1: suit1,               # first canon suit must switch.
+            suit1: canon1,                   # The first flop suit and the
+            canon1: suit1,                   # first canon suit must switch.
             both_unused[0]: both_unused[0],  # The remaining two suits
-            both_unused[1]: both_unused[1]   # don't matter
+            both_unused[1]: both_unused[1],  # don't matter
         }
 
     elif suit1 == suit2 != suit3:
         # suit pattern is 'AAB'
         return {
-            suit1: cano_suit1,               # suit of 1st card = 1st canon
-            suit3: cano_suit3,               # suit of 3rd card = 3rd canon
-            unused[0]: cano_unused[0],       # Must be the remaining two
-            unused[1]: cano_unused[1]        # suits of each set
+            suit1: canon1,                   # suit of 1st card = 1st canon
+            suit3: canon3,                   # suit of 3rd card = 3rd canon
+            unused[0]: canonical_unused[0],  # Must be the remaining two
+            unused[1]: canonical_unused[1],  # suits of each set
         }
 
     elif suit1 != suit2 == suit3:
         # suit pattern is 'ABB'
         return {
-            suit1: cano_suit1,               # suit of 1st card = 1st canon
-            suit2: cano_suit2,               # suit of 2nd card = 2nd canon
-            unused[0]: cano_unused[0],       # Must be the remaining two
-            unused[1]: cano_unused[1]        # suits of each set
+            suit1: canon1,                   # suit of 1st card = 1st canon
+            suit2: canon2,                   # suit of 2nd card = 2nd canon
+            unused[0]: canonical_unused[0],  # Must be the remaining two
+            unused[1]: canonical_unused[1],  # suits of each set
         }
 
     # Note the order of cards
     elif suit1 == suit3 != suit2:
         # suit pattern is 'ABA'
         return {
-            suit1: cano_suit1,               # suit of 1st card = 1st canon
-            suit2: cano_suit2,               # suit of 2nd card = 2nd canon
-            unused[0]: cano_unused[0],       # Must be the remaining two
-            unused[1]: cano_unused[1]        # suits of each set
+            suit1: canon1,                   # suit of 1st card = 1st canon
+            suit2: canon2,                   # suit of 2nd card = 2nd canon
+            unused[0]: canonical_unused[0],  # Must be the remaining two
+            unused[1]: canonical_unused[1],  # suits of each set
         }
 
     elif suit1 != suit2 != suit3:
         # suit pattern is 'ABC'
         return {
-            suit1: cano_suit1,               # suit of 1st card = 1st canon
-            suit2: cano_suit2,               # suit of 2nd card = 2nd canon
-            suit3: cano_suit3,               # suit of 3rd card = 3rd canon
-            unused[0]: cano_unused[0]        # The remaining suits.
+            suit1: canon1,                   # suit of 1st card = 1st canon
+            suit2: canon2,                   # suit of 2nd card = 2nd canon
+            suit3: canon3,                   # suit of 3rd card = 3rd canon
+            unused[0]: canonical_unused[0],  # The remaining suits.
         }
 
 #------------------------------------------------------------------------------
