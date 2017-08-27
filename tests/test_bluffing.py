@@ -120,6 +120,6 @@ def test_get_bluffcandidates():
     # We should ignore pairs made without our holecards.
     assert set(get_bluffcandidates(flop('2s 2s Ac'))) == set()
 
-    # TODO: This hand exist in the bluff candidate set, but actually
+    # TODO: This hand exists in the bluff candidate set, but actually
     # it's an open-ended straight draw which makes it a semi-bluff.
     assert holecards('5c 6c') in set(get_bluffcandidates(flop('4s 7s Ac')))
