@@ -1,4 +1,4 @@
-from pokertools import cards_from_str
+from pokertools import hand, flop, holecards
 from properties.hand import (
     is_straightflush,
     is_fourofakind,
@@ -28,8 +28,6 @@ from properties.holecards import(
     has_one_gap,
     has_two_gap,
 )
-
-hand = flop = holecards = cards_from_str
 
 
 #------------------------------------------------------------------------------

@@ -58,9 +58,6 @@ class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
     """
     A playing card.
 
-    Should be accessed via the `CARDS` container available in this module,
-    which is a dictionary of pre-built Card objects.
-
     Attributes:
         name (str): e.g. "Kh", "2s", etc. Satisfies the regex [2-9TJQKA][cdhs]
         rank (str): e.g. "K", "2", etc. Equivalent to name[0]
@@ -136,6 +133,7 @@ def _make_holecards_dict():
         in zip(HOLECARDS_NAMES, holecards_list)
     }
 
+
 # Accessible by string name, e.g. CARDS["As"], HOLECARDS["Ah Jh"]
 CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
@@ -144,6 +142,22 @@ CANONICAL_HOLECARDS = {k: HOLECARDS[k] for k in CANONICAL_HOLECARDS_NAMES}
 
 #------------------------------------------------------------------------------
 # Utils
+
+
+def cards_from_str(names):
+    """
+    Given a string with space-separated card names, return
+    a tuple of Card objects.
+
+    >>> cards_from_str('4h 5h 6h 7h 8h')
+    (<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>)
+    """
+    return tuple(CARDS[name] for name in names.split())
+
+
+# These aliases allow us to create tuples of cards easily, while also describing
+# the intended use. They constitute the main interface provided by this module.
+holecards = flop = hand = cards_from_str
 
 
 def make_deck():
@@ -158,24 +172,13 @@ def deal(deck, n=1):
     return tuple(deck.pop() for _ in range(n))
 
 
-def cards_from_str(names):
-    """
-    Given a string with space-separated card names, return
-    a tuple of Card objects.
-
-    >>> cards_from_str('4h 5h 6h 7h 8h')
-    (<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>)
-    """
-    return tuple(CARDS[name] for name in names.split())
-
-
 def sorted_count_of_values(cards):
     """
     Takes a list of pokertools.Card objects and returns a sorted
     list of counts of the card ranks.
 
     For example, consider this hand:
-        [<Card: 7h>, <Card: Ks>, <Card: 7d>, <Card: 7c>, <Card: Kd>]
+        hand('7h Ks 7d 7c Kd')
     Its corresponding list of numerical ranks is:
         [7, 13, 7, 7, 13].
     Counting each element and sorting returns:

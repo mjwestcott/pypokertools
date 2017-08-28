@@ -1,4 +1,4 @@
-from pokertools import cards_from_str
+from pokertools import flop, holecards
 from examples.bluffing import (
     is_onepair,
     is_3straight,
@@ -6,8 +6,6 @@ from examples.bluffing import (
     is_bluffcandidate,
     get_bluffcandidates,
 )
-
-hand = flop = holecards = cards_from_str
 
 
 def test_is_onepair():

@@ -161,11 +161,10 @@ def is_bluffcandidate(holecards, flop):
         - three-to-a-straight using both hole cards
 
     Example:
-        >>> from pokertools import cards_from_str
-        >>> holecards = flop = cards_from_str
-        >>> assert holecards('Qd Jd') in set(get_bluffcandidates(flop('Kc 2d 2h')))
-        >>> assert holecards('8s 7s') in set(get_bluffcandidates(flop('9c 4s 3d')))
-        >>> assert holecards('Kc Jc') in set(get_bluffcandidates(flop('Qc 8d 3h')))
+        >>> from pokertools import flop, holecards
+        >>> assert holecards('Qd Jd') in get_bluffcandidates(flop('Kc 2d 2h'))
+        >>> assert holecards('8s 7s') in get_bluffcandidates(flop('9c 4s 3d'))
+        >>> assert holecards('Kc Jc') in get_bluffcandidates(flop('Qc 8d 3h'))
     """
     hand = tuple(chain(holecards, flop))
     return (
