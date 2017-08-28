@@ -73,8 +73,8 @@ def is_onepair(holecards, flop, required_holecards=1):
         rank1, rank2 = sorted_numerical_ranks(holecards)
         rank_counts = Counter([card.numerical_rank for card in hand])
         return (
-            rank_counts[rank1] == 2 or rank_counts[rank2] == 2
-            and hand_is_onepair(hand)
+            hand_is_onepair(hand)
+            and rank_counts[rank1] == 2 or rank_counts[rank2] == 2
         )
     elif required_holecards == 0:
         return hand_is_onepair(hand)
