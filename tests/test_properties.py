@@ -9,6 +9,8 @@ from properties.hand import (
     is_twopair,
     is_onepair,
     is_nopair,
+    is_pair_or_better,
+    is_twopair_or_better,
 )
 from properties.flop import (
     is_rainbow,
@@ -96,6 +98,32 @@ def test_is_nopair():
     assert is_nopair(hand('Ac 2s 3h 4c 6s'))
     assert not is_nopair(hand('4h 4d 4s 7h 8h'))
     assert not is_nopair(hand('As Ks Qs Js Ts'))
+
+
+def test_is_pair_or_better():
+    assert is_pair_or_better(hand('Ad Ac 7s 6s 5s'))
+    assert is_pair_or_better(hand('Ad Ac Kd Kc 2h'))
+    assert is_pair_or_better(hand('Ad Ac As 6c 5c'))
+    assert is_pair_or_better(hand('Ad Kh Qs Jc Td'))
+    assert is_pair_or_better(hand('Ad 8d 7d 6d 5d'))
+    assert is_pair_or_better(hand('Ad Ac As 5d 5c'))
+    assert is_pair_or_better(hand('Ad Ac As Ah 5c'))
+    assert is_pair_or_better(hand('Ad Kd Qd Jd Td'))
+    assert not is_pair_or_better(hand('Ad Kd Qd Jd 3c'))
+    assert not is_pair_or_better(hand('Ts 9s 7c 6s 5s'))
+
+
+def test_is_twopair_or_better():
+    assert is_twopair_or_better(hand('Ad Ac Kd Kc 2h'))
+    assert is_twopair_or_better(hand('Ad Ac As 6c 5c'))
+    assert is_twopair_or_better(hand('Ad Kh Qs Jc Td'))
+    assert is_twopair_or_better(hand('Ad 8d 7d 6d 5d'))
+    assert is_twopair_or_better(hand('Ad Ac As 5d 5c'))
+    assert is_twopair_or_better(hand('Ad Ac As Ah 5c'))
+    assert is_twopair_or_better(hand('Ad Kd Qd Jd Td'))
+    assert not is_twopair_or_better(hand('Ad Ac 7s 6s 5s'))
+    assert not is_twopair_or_better(hand('Ad Kd Qd Jd 3c'))
+    assert not is_twopair_or_better(hand('Ts 9s 7c 6s 5s'))
 
 
 #------------------------------------------------------------------------------
