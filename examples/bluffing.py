@@ -30,7 +30,10 @@ from pokertools import (
     sorted_numerical_ranks,
     num_suits,
 )
-from properties.hand import is_nopair
+from properties.hand import is_onepair as hand_is_onepair
+from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
+from properties.flop import has_pair as flop_has_pair
+from properties.holecards import is_pair as is_pocket_pair
 
 
 #------------------------------------------------------------------------------
@@ -38,8 +41,8 @@ from properties.hand import is_nopair
 #
 # In this section it is important to keep track of our holecards. As a
 # result, these functions accept two positional arguments:
-#     - holecards, a list of two cards
-#     - flop, a list of three cards
+#     - holecards, a tuple of two cards
+#     - flop, a tuple of three cards
 # We can use this decorator to ensure that these arguments, when flattened
 # by itertools.chain, comprise exactly five non-conflicting cards.
 
@@ -55,7 +58,7 @@ def five_cards(f):
     """
     @wraps(f)
     def wrapper(*args, **kwargs):
-        cards = list(chain(*args))
+        cards = tuple(chain(*args))
         n = len(cards)
         if n != 5:
             raise ValueError("Exactly five cards must be passed to {}".format(f.__name__))
@@ -66,46 +69,38 @@ def five_cards(f):
 
 
 @five_cards
+def is_onepair(holecards, flop, required_holecards=1):
+    """
+    Returns a bool indicating whether our holecards have made one pair
+    on this flop.
+    """
+    assert 0 <= required_holecards <= 2
+    hand = tuple(chain(holecards, flop))
+
+    if required_holecards == 2:
+        return is_pocket_pair(holecards)
+    elif required_holecards == 1:
+        rank1, rank2 = sorted_numerical_ranks(holecards)
+        rank_counts = Counter([card.numerical_rank for card in hand])
+        return (
+            rank_counts[rank1] == 2 or rank_counts[rank2] == 2
+            and hand_is_onepair(hand)
+        )
+    elif required_holecards == 0:
+        return hand_is_onepair(hand)
+
+
+@five_cards
 def is_3straight(holecards, flop, required_holecards=2):
     """
     Returns a bool indicating whether our holecards have three-to-a-straight
     on this flop. Three-to-a-straight means that there exists a combination of
     three of the five total cards that is consecutive in rank.
-
-    (Specify how many of our holecards must be part of the combination using
-    required_holecards.  Default is 2 since this is intended to represent a
-    property of those holecards that make it a good candidate for bluffing. A
-    value 1 means at least 1.)
-
-    Args:
-        holecards (list): two pokertools.Card objects
-        flop (list): three pokertools.Card objects
-
-    Kwargs:
-        required_holecards (int): from 0-2 specifying how many of our
-            holecards are required to satisfy the property.
-
-    Returns:
-        True if the hand has the property three-to-a-straight on this flop
-            with the required number of holecards;
-        False otherwise
-
-    Examples:
-        >>> from pokertools import CARDS, HOLECARDS
-        >>> my_holecards = HOLECARDS['4d 5c']
-        >>> flop = [CARDS['Qd'], CARDS['3h'], CARDS['Kh']]
-        >>> is_3straight(my_holecards, flop)
-        True
-
-        >>> my_holecards = HOLECARDS['2h 3c']
-        >>> flop = [CARDS['8h'], CARDS['7h'], CARDS['6h']]
-        >>> is_3straight(my_holecards, flop)
-        False
     """
     assert 0 <= required_holecards <= 2
 
     rank1, rank2 = sorted_numerical_ranks(holecards)
-    hand = list(chain(holecards, flop))
+    hand = tuple(chain(holecards, flop))
     ranks = sorted_numerical_ranks(hand)
 
     def subseqs():
@@ -135,40 +130,11 @@ def is_3flush(holecards, flop, required_holecards=2):
     Returns a bool indicating whether our holecards have three-to-a-flush
     on this flop. Three-to-a-flush means that there exists a combination of
     three of the five total cards which have the same suit.
-
-    (Specify how many of our holecards must be part of the combination using
-    required_holecards. Default is 2 since this is intended to represent a
-    property of those holecards that make it a good candidate for bluffing. A
-    value 1 means at least 1.)
-
-    Args:
-        holecards (list): two pokertools.Card objects
-        flop (list): three pokertools.Card objects
-
-    Kwargs:
-        required_holecards (int): from 0-2 specifying how many of our
-            holecards are required to satisfy the property
-
-    Returns:
-        True if holecards has the property three-to-a-flush on this flop;
-        False otherwise
-
-    Examples:
-        >>> from pokertools import CARDS, HOLECARDS
-        >>> my_holecards = HOLECARDS['2d 3d']
-        >>> flop = [CARDS['7d'], CARDS['Qh'], CARDS['Kh']]
-        >>> is_3flush(my_holecards, flop)
-        True
-
-        >>> my_holecards = HOLECARDS['2h 3d']
-        >>> flop = [CARDS['7h'], CARDS['Ah'], CARDS['Kd']]
-        >>> is_3flush(my_holecards, flop)
-        False
     """
     assert 0 <= required_holecards <= 2
 
     suit1, suit2 = [card.suit for card in holecards]
-    hand = list(chain(holecards, flop))
+    hand = tuple(chain(holecards, flop))
     suit_counts = Counter([card.suit for card in hand])
 
     for suit in suit_counts:
@@ -193,33 +159,14 @@ def is_bluffcandidate(holecards, flop):
     candidate for bluffing.
 
     Checks whether our hand has three properties:
-        - three-to-a-flush using both hole cards       (see is_3flush())
-        - three-to-a-straight using both hole cards    (see is_3straight())
-        - not(pair-or-better)                          (see is_nopair())
-
-    Args:
-        holecards (list): two pokertools.Card objects
-        flop (list): three pokertools.Card objects
-
-    Returns:
-        True if holecards has the properties listed above on this flop;
-        False otherwise
-
-    Example:
-        >>> from pokertools import CARDS, HOLECARDS
-        >>> my_holecards = HOLECARDS['2d 3d']
-        >>> flop = [CARDS['7d'], CARDS['As'], CARDS['Kh']]
-        >>> is_bluffcandidate(my_holecards, flop)
-        True
-
-        >>> my_holecards = HOLECARDS['2h 3c']
-        >>> flop = [CARDS['8h'], CARDS['7h'], CARDS['6h']]
-        >>> is_bluffcandidate(my_holecards, flop)
-        False
+        - not(pair-or-better) using at least one holecard
+        - three-to-a-flush using both hole cards
+        - three-to-a-straight using both hole cards
     """
-    hand = list(chain(holecards, flop))
+    hand = tuple(chain(holecards, flop))
     return (
-        is_nopair(hand)
+        not hand_is_twopair_or_better(hand)
+        and not is_onepair(holecards, flop, required_holecards=1)
         and is_3flush(holecards, flop, required_holecards=2)
         and is_3straight(holecards, flop, required_holecards=2)
     )

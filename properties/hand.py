@@ -52,3 +52,18 @@ def is_nopair(hand):
         and is_straight(hand) is False
         and is_flush(hand) is False
     )
+
+
+def is_pair_or_better(hand):
+    return not is_nopair(hand)
+
+
+def is_twopair_or_better(hand):
+    return (
+        is_twopair(hand)
+        or is_threeofakind(hand)
+        or is_flush(hand)
+        or is_straight(hand)
+        or is_fullhouse(hand)
+        or is_fourofakind(hand)
+    )
