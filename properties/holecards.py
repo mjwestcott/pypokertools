@@ -38,4 +38,3 @@ def _gap_size(holecards):
         return min(high, low)
 
     return b - a
-

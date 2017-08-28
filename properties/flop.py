@@ -50,6 +50,3 @@ def has_gutshot(flop):
         max(ranks) - min(ranks) == 3
         and sorted_count_of_values(flop) == [1, 1, 1]
     )
-
-
-
