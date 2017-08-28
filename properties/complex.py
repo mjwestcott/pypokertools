@@ -21,19 +21,17 @@ from properties.hand import is_onepair as hand_is_onepair
 
 
 @five_cards
-def is_onepair(holecards, flop, include_board=True):
+def is_onepair(holecards, flop, exclude_board=True):
     """
     Returns a bool indicating whether our holecards have made one pair
     on this flop.
 
-    kwarg `include_board` controls whether we include a pair to existing
+    kwarg `exclude_board` controls whether we exclude a pair existing
     on the board only, i.e. made without using any of our holecards.
     """
     hand = tuple(chain(holecards, flop))
 
-    if include_board:
-        return hand_is_onepair(hand)
-    else:
+    if exclude_board:
         # We must use at least one of our holecards
         rank1, rank2 = sorted_numerical_ranks(holecards)
         rank_counts = Counter([card.numerical_rank for card in hand])
@@ -41,6 +39,8 @@ def is_onepair(holecards, flop, include_board=True):
             hand_is_onepair(hand)
             and rank_counts[rank1] == 2 or rank_counts[rank2] == 2
         )
+    else:
+        return hand_is_onepair(hand)
 
 
 @five_cards

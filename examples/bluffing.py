@@ -20,7 +20,7 @@ def is_bluffcandidate(holecards, flop):
     candidate for bluffing.
 
     Checks whether our hand has three properties:
-        - not(pair-or-better) using at least one holecard
+        - not(pair-or-better) unless it's a pair on the board
         - three-to-a-flush using both hole cards
         - three-to-a-straight using both hole cards
 
@@ -32,7 +32,7 @@ def is_bluffcandidate(holecards, flop):
     """
     hand = tuple(chain(holecards, flop))
     return (
-        not is_onepair(holecards, flop, include_board=False)
+        not is_onepair(holecards, flop, exclude_board=True)
         and not hand_is_twopair_or_better(hand)
         and is_3flush(holecards, flop, required_holecards=2)
         and is_3straight(holecards, flop, required_holecards=2)

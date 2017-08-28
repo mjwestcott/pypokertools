@@ -32,12 +32,12 @@ def test_has_two_overcards():
 
 
 def test_is_onepair():
-    assert is_onepair(holecards('2c 4h'), flop('Tc Th 5d'), include_board=True)
-    assert is_onepair(holecards('2c Th'), flop('Tc 4h 5d'), include_board=True)
-    assert is_onepair(holecards('2c 2h'), flop('Ac Kh Qd'), include_board=False)
-    assert is_onepair(holecards('2c Qh'), flop('Ac Kh Qd'), include_board=False)
-    assert not is_onepair(holecards('2c 4h'), flop('5c Jh Qd'), include_board=True)
-    assert not is_onepair(holecards('4c Ah'), flop('5c 5h Qd'), include_board=False)
+    assert is_onepair(holecards('2c 4h'), flop('Tc Th 5d'), exclude_board=False)
+    assert is_onepair(holecards('2c Th'), flop('Tc 4h 5d'), exclude_board=False)
+    assert is_onepair(holecards('2c 2h'), flop('Ac Kh Qd'), exclude_board=True)
+    assert is_onepair(holecards('2c Qh'), flop('Ac Kh Qd'), exclude_board=True)
+    assert not is_onepair(holecards('2c 4h'), flop('5c Jh Qd'), exclude_board=False)
+    assert not is_onepair(holecards('4c Ah'), flop('5c 5h Qd'), exclude_board=True)
 
 
 def test_is_3straight():
