@@ -24,20 +24,20 @@ def test_five_cards_decorator():
 
 
 def test_has_two_overcards():
-    assert has_two_overcards(holecards('Ac Kc'), flop('Tc Th 5d'))
     assert has_two_overcards(holecards('Kh Ts'), flop('4c 3h 2d'))
+    assert has_two_overcards(holecards('Ac Kc'), flop('Tc Th 5d'))  # Even though pair on board
+    assert has_two_overcards(holecards('Qd Qc'), flop('Tc 4h 5d'))  # Even though it's a pair
     assert not has_two_overcards(holecards('Ac 4h'), flop('5c 5h Qd'))
     assert not has_two_overcards(holecards('Kh Ts'), flop('Qd Qc Qs'))
-    assert not has_two_overcards(holecards('Qd Qc'), flop('Tc 4h 5d'))  # It's a pair
 
 
 def test_is_onepair():
-    assert is_onepair(holecards('2c 4h'), flop('Tc Th 5d'), required_holecards=0)
-    assert is_onepair(holecards('2c Th'), flop('Tc 4h 5d'), required_holecards=1)
-    assert is_onepair(holecards('2c 2h'), flop('Ac Kh Qd'), required_holecards=2)
-    assert not is_onepair(holecards('2c 4h'), flop('5c Jh Qd'), required_holecards=0)
-    assert not is_onepair(holecards('4c Ah'), flop('5c 5h Qd'), required_holecards=1)
-    assert not is_onepair(holecards('2c 4c'), flop('5c 5h Qd'), required_holecards=2)
+    assert is_onepair(holecards('2c 4h'), flop('Tc Th 5d'), include_board=True)
+    assert is_onepair(holecards('2c Th'), flop('Tc 4h 5d'), include_board=True)
+    assert is_onepair(holecards('2c 2h'), flop('Ac Kh Qd'), include_board=False)
+    assert is_onepair(holecards('2c Qh'), flop('Ac Kh Qd'), include_board=False)
+    assert not is_onepair(holecards('2c 4h'), flop('5c Jh Qd'), include_board=True)
+    assert not is_onepair(holecards('4c Ah'), flop('5c 5h Qd'), include_board=False)
 
 
 def test_is_3straight():

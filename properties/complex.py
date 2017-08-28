@@ -18,30 +18,29 @@ from itertools import chain
 
 from pokertools import five_cards, sorted_numerical_ranks, rank_subsequences
 from properties.hand import is_onepair as hand_is_onepair
-from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
-from properties.holecards import is_pair as is_pocket_pair
 
 
 @five_cards
-def is_onepair(holecards, flop, required_holecards=1):
+def is_onepair(holecards, flop, include_board=True):
     """
     Returns a bool indicating whether our holecards have made one pair
     on this flop.
+
+    kwarg `include_board` controls whether we include a pair to existing
+    on the board only, i.e. made without using any of our holecards.
     """
-    assert 0 <= required_holecards <= 2
     hand = tuple(chain(holecards, flop))
 
-    if required_holecards == 2:
-        return is_pocket_pair(holecards)
-    elif required_holecards == 1:
+    if include_board:
+        return hand_is_onepair(hand)
+    else:
+        # We must use at least one of our holecards
         rank1, rank2 = sorted_numerical_ranks(holecards)
         rank_counts = Counter([card.numerical_rank for card in hand])
         return (
             hand_is_onepair(hand)
             and rank_counts[rank1] == 2 or rank_counts[rank2] == 2
         )
-    elif required_holecards == 0:
-        return hand_is_onepair(hand)
 
 
 @five_cards
@@ -102,15 +101,9 @@ def has_two_overcards(holecards, flop):
     """
     Returns a bool indicating whether our holecards have two overcards on this
     flop. Two overcards means both ranks are higher than the highest rank on the
-    flop and that our hand is not 'pair-or-better' (unless it's only on the board).
+    flop.
     """
-    hand = tuple(chain(holecards, flop))
-    flop_ranks = sorted_numerical_ranks(flop)
-
     return all(
-        all(card.numerical_rank > r for r in flop_ranks)
+        all(card.numerical_rank > r for r in sorted_numerical_ranks(flop))
         for card in holecards
-    ) and (
-        not is_onepair(holecards, flop, required_holecards=1)
-        and not hand_is_twopair_or_better(hand)
     )

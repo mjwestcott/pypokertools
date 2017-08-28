@@ -32,7 +32,7 @@ def is_bluffcandidate(holecards, flop):
     """
     hand = tuple(chain(holecards, flop))
     return (
-        not is_onepair(holecards, flop, required_holecards=1)
+        not is_onepair(holecards, flop, include_board=False)
         and not hand_is_twopair_or_better(hand)
         and is_3flush(holecards, flop, required_holecards=2)
         and is_3straight(holecards, flop, required_holecards=2)
