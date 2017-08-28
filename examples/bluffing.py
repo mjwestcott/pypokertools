@@ -24,10 +24,7 @@ from collections import Counter
 from functools import wraps
 from itertools import chain
 
-from pokertools import (
-    CANONICAL_HOLECARDS,
-    sorted_numerical_ranks,
-)
+from pokertools import CANONICAL_HOLECARDS, sorted_numerical_ranks
 from properties.hand import is_onepair as hand_is_onepair
 from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
 from properties.holecards import is_pair as is_pocket_pair
