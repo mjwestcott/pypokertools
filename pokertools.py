@@ -159,12 +159,12 @@ def deal(deck, n=1):
 def cards_from_str(names):
     """
     Given a string with space-separated card names, return
-    a list of Card objects representing a 5-card hand.
+    a tuple of Card objects.
 
     >>> cards_from_str('4h 5h 6h 7h 8h')
-    [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]
+    (<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>)
     """
-    return [CARDS[name] for name in names.split()]
+    return tuple(CARDS[name] for name in names.split())
 
 
 def sorted_count_of_values(cards):

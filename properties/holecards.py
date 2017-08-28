@@ -4,6 +4,9 @@ from pokertools import (
     num_suits,
 )
 
+#------------------------------------------------------------------------------
+# Properties of holecards
+
 
 def is_pair(holecards):
     return sorted_count_of_values(holecards) == [2]
@@ -35,3 +38,4 @@ def _gap_size(holecards):
         return min(high, low)
 
     return b - a
+

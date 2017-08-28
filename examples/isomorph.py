@@ -47,52 +47,44 @@ def get_canonical(flop):
     the second is 'd' and the third is 'h'.
 
     Args:
-        flop (list): three pokertools.Card objects
+        flop (tuple): three pokertools.Card objects
 
     Returns
-        A list of three pokertools.Card objects which represent
+        A tuple of three pokertools.Card objects which represent
         the canonical version of the given flop.
 
-    >>> flop = [CARDS['Ks'], CARDS['2c'], CARDS['3s']]
+    >>> flop = (CARDS['Ks'], CARDS['2c'], CARDS['3s'])
     >>> get_canonical(flop)
-    [<Card: 2c>, <Card: 3d>, <Card: Kd>]
+    (<Card: 2c>, <Card: 3d>, <Card: Kd>)
     """
     card1, card2, card3 = sorted(flop)
     A, B, C = "cdh"
 
     if card1.suit == card2.suit == card3.suit:
-        return [
+        return (
             CARDS[card1.rank + A],
             CARDS[card2.rank + A],
             CARDS[card3.rank + A],
-        ]
+        )
 
     elif card1.suit == card2.suit != card3.suit:
-        return [
+        return (
             CARDS[card1.rank + A],
             CARDS[card2.rank + A],
             CARDS[card3.rank + B],
-        ]
+        )
 
     elif card1.suit == card3.suit != card2.suit:
-        canonical = [
-            CARDS[card1.rank + A],
-            CARDS[card2.rank + B],
-            CARDS[card3.rank + A],
-        ]
-
         # Special case: if the 2nd and 3rd cards are a pair e.g. the flop is
         # [Jc, Qd, Qc], then our suit changes have resulted in an
         # unsorted flop! The correct canonical form is [Jc, Qc, Qd].
-        return sorted(canonical)
-
-    elif card1.suit != card2.suit == card3.suit:
-        canonical = [
+        return tuple(sorted([
             CARDS[card1.rank + A],
             CARDS[card2.rank + B],
-            CARDS[card3.rank + B],
-        ]
+            CARDS[card3.rank + A],
+        ]))
 
+    elif card1.suit != card2.suit == card3.suit:
         # Special case: if the 1st and 2nd cards are a pair e.g. flop is
         # [2c, 2d, 8d], that is isomorphic with those cards being switched
         # e.g. [2d, 2c, 8d] -- which forms the suit pattern already
@@ -100,21 +92,29 @@ def get_canonical(flop):
         # This version has higher priority lexicographically -- it has more
         # clubs! To make this change we can simply change the suit of the
         # third card to 'c'.
-        if canonical[0].rank == canonical[1].rank:
-            canonical[2] = CARDS[card3.rank + A]
-        return canonical
+        if card1.rank == card2.rank:
+            return (
+                CARDS[card1.rank + A],
+                CARDS[card2.rank + B],
+                CARDS[card3.rank + A],
+            )
+        return (
+            CARDS[card1.rank + A],
+            CARDS[card2.rank + B],
+            CARDS[card3.rank + B],
+        )
 
     elif card1.suit != card2.suit != card3.suit:
-        return [
+        return (
             CARDS[card1.rank + A],
             CARDS[card2.rank + B],
             CARDS[card3.rank + C],
-        ]
+        )
 
 
 def get_all_canonicals():
     """
-    Returns the set of all canonical flops. Each flop is a list of three
+    Returns the set of all canonical flops. Each flop is a tuple of three
     pokertools.Card objects.
     """
     all_possible_flops = combinations(CARDS.values(), r=3)
@@ -127,17 +127,17 @@ def get_all_canonicals():
 def get_suit_isomorphs(flop):
     """
     Returns a list of all suit-isomorphic combinations of the flop. Each
-    flop is a list of three pokertools.Card objects.
+    flop is a tuple of three pokertools.Card objects.
 
-    >>> flop = [CARDS['As'], CARDS['4s'], CARDS['Ts']]
+    >>> flop = (CARDS['As'], CARDS['4s'], CARDS['Ts'])
     >>> for iso in get_suit_isomorphs(flop):
     ...     print(iso)
-    [<Card: Ac>, <Card: 4c>, <Card: Tc>]
-    [<Card: Ad>, <Card: 4d>, <Card: Td>]
-    [<Card: Ah>, <Card: 4h>, <Card: Th>]
-    [<Card: As>, <Card: 4s>, <Card: Ts>]
+    (<Card: Ac>, <Card: 4c>, <Card: Tc>)
+    (<Card: Ad>, <Card: 4d>, <Card: Td>)
+    (<Card: Ah>, <Card: 4h>, <Card: Th>)
+    (<Card: As>, <Card: 4s>, <Card: Ts>)
 
-    >>> flop = [CARDS['Kd'], CARDS['Qh'], CARDS['8c']]
+    >>> flop = (CARDS['Kd'], CARDS['Qh'], CARDS['8c'])
     >>> len(get_suit_isomorphs(flop))
     24
     """
@@ -146,11 +146,11 @@ def get_suit_isomorphs(flop):
     if card1.suit == card2.suit == card3.suit:
         # For each suit, produce the suit pattern 'AAA'
         return [
-            [
+            (
                 CARDS[card1.rank + A],
                 CARDS[card2.rank + A],
                 CARDS[card3.rank + A],
-            ]
+            )
             for A in SUITS
         ]
 
@@ -158,11 +158,11 @@ def get_suit_isomorphs(flop):
         # For each combination of two non-identical
         # suits, produce the suit pattern 'AAB'
         return [
-            [
+            (
                 CARDS[card1.rank + A],
                 CARDS[card2.rank + A],
                 CARDS[card3.rank + B],
-            ]
+            )
             for A in SUITS for B in SUITS if A != B
         ]
 
@@ -170,11 +170,11 @@ def get_suit_isomorphs(flop):
         # For each combination of two non-identical
         # suits, produce the suit pattern 'ABB'
         return [
-            [
+            (
                 CARDS[card1.rank + A],
                 CARDS[card2.rank + B],
                 CARDS[card3.rank + B],
-            ]
+            )
             for A in SUITS for B in SUITS if A != B
         ]
 
@@ -182,11 +182,11 @@ def get_suit_isomorphs(flop):
         # For each combination of two non-identical
         # suits, produce the suit pattern 'ABA'
         return [
-            [
+            (
                 CARDS[card1.rank + A],
                 CARDS[card2.rank + B],
                 CARDS[card3.rank + A],
-            ]
+            )
             for A in SUITS for B in SUITS if A != B
         ]
 
@@ -194,11 +194,11 @@ def get_suit_isomorphs(flop):
         # For each combination of three non-identical
         # suits, produce the suit pattern 'ABC'
         return [
-            [
+            (
                 CARDS[card1.rank + A],
                 CARDS[card2.rank + B],
                 CARDS[card3.rank + C],
-            ]
+            )
             for A in SUITS for B in SUITS for C in SUITS
             if (A != B and B != C and A != C)
         ]
@@ -214,13 +214,12 @@ def get_translation_dict(flop):
     version. This tell us what the 'translation' is between them, allowing us
     to translate the suits of our holecards.
 
-    >>> flop = [CARDS['6h'], CARDS['2d'], CARDS['Qd']]
+    >>> flop = (CARDS['6h'], CARDS['2d'], CARDS['Qd'])
     >>> get_canonical(flop)
-    [<Card: 2c>, <Card: 6d>, <Card: Qc>]
+    (<Card: 2c>, <Card: 6d>, <Card: Qc>)
     >>> get_translation_dict(flop) == {'c': 'h', 'd': 'c', 'h': 'd', 's': 's'}
     True
     """
-
     flop = sorted(flop)
     suit1, suit2, suit3 = [card.suit for card in flop]
 
