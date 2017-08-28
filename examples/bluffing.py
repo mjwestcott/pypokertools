@@ -24,32 +24,15 @@ from collections import Counter
 from functools import wraps
 from itertools import chain
 
-from pokertools import CANONICAL_HOLECARDS
+from pokertools import (
+    CANONICAL_HOLECARDS,
+    sorted_count_of_values,
+    sorted_numerical_ranks,
+    num_suits,
+)
 
 #------------------------------------------------------------------------------
 # Standard Hand Properties
-
-
-def sorted_count_of_values(hand):
-    """
-    Takes a list of five pokertools.Card objects and returns a sorted
-    list of counts of the card ranks.
-
-    For example, consider this hand:
-        [<Card: 7h>, <Card: Ks>, <Card: 7d>, <Card: 7c>, <Card: Kd>]
-    Its corresponding list of numerical ranks is:
-        [7, 13, 7, 7, 13].
-    Counting each element and sorting returns:
-        [3, 2].
-    This is a pattern we can use to determine hand properties.
-    """
-    list_of_ranks = [card.numerical_rank for card in hand]
-    return sorted(Counter(list_of_ranks).values(), reverse=True)
-
-
-# Each function below finds standard poker hands. Each takes a list of five
-# pokertools.Card objects and returns a bool. They are doctested at the end of
-# the module
 
 
 def is_straightflush(hand):
@@ -65,17 +48,17 @@ def is_fullhouse(hand):
 
 
 def is_flush(hand):
-    return len(set([card.suit for card in hand])) == 1
+    return num_suits(hand) == 1
 
 
 def is_straight(hand):
-    numerical_ranks = sorted([card.numerical_rank for card in hand])
+    ranks = sorted_numerical_ranks(hand)
 
     # Special case for Ace playing low
-    if numerical_ranks == [2, 3, 4, 5, 14]:
+    if ranks == [2, 3, 4, 5, 14]:
         return True
     return (
-        max(numerical_ranks) - min(numerical_ranks) == 4
+        max(ranks) - min(ranks) == 4
         and sorted_count_of_values(hand) == [1, 1, 1, 1, 1]
     )
 
@@ -171,9 +154,9 @@ def is_3straight(holecards, flop, required_holecards=2):
     """
     assert 0 <= required_holecards <= 2
 
-    rank1, rank2 = [card.numerical_rank for card in holecards]
+    rank1, rank2 = sorted_numerical_ranks(holecards)
     hand = list(chain(holecards, flop))
-    ranks = sorted([card.numerical_rank for card in hand])
+    ranks = sorted_numerical_ranks(hand)
 
     def subseqs():
         for i in range(len(ranks) - 2):

@@ -6,7 +6,7 @@ To create a convenient API for interactive analysis, a subclass of
 namedtuple is used to represent cards.
 """
 import random
-from collections import namedtuple
+from collections import namedtuple, Counter
 from itertools import combinations, permutations
 
 #------------------------------------------------------------------------------
@@ -165,3 +165,28 @@ def cards_from_str(names):
     [<Card: 4h>, <Card: 5h>, <Card: 6h>, <Card: 7h>, <Card: 8h>]
     """
     return [CARDS[name] for name in names.split()]
+
+
+def sorted_count_of_values(cards):
+    """
+    Takes a list of pokertools.Card objects and returns a sorted
+    list of counts of the card ranks.
+
+    For example, consider this hand:
+        [<Card: 7h>, <Card: Ks>, <Card: 7d>, <Card: 7c>, <Card: Kd>]
+    Its corresponding list of numerical ranks is:
+        [7, 13, 7, 7, 13].
+    Counting each element and sorting returns:
+        [3, 2].
+    This is a pattern we can use to determine hand properties.
+    """
+    list_of_ranks = [card.numerical_rank for card in cards]
+    return sorted(Counter(list_of_ranks).values(), reverse=True)
+
+
+def sorted_numerical_ranks(cards):
+    return sorted([card.numerical_rank for card in cards])
+
+
+def num_suits(cards):
+    return len(set(card.suit for card in cards))
