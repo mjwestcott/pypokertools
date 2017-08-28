@@ -1,13 +1,7 @@
-import pytest
-
 from pokertools import flop, holecards
 from examples.bluffing import (
-    is_onepair,
-    is_3straight,
-    is_3flush,
     is_bluffcandidate,
     get_bluffcandidates,
-    ConflictingCards,
 )
 
 
@@ -35,50 +29,6 @@ def test_get_bluffcandidates():
     # TODO: This hand exists in the bluff candidate set, but actually
     # it's an open-ended straight draw which makes it a semi-bluff.
     assert holecards('6c 5c') in set(get_bluffcandidates(flop('4s 7s Ac')))
-
-
-def test_five_cards_decorator():
-    with pytest.raises(ConflictingCards):
-        is_onepair(holecards('Ac Ac'), flop('Tc Th 5d'))
-
-    with pytest.raises(ConflictingCards):
-        is_3straight(holecards('Ac Tc'), flop('Tc Th 5d'))
-
-    with pytest.raises(ConflictingCards):
-        is_3flush(holecards('Ac 5d'), flop('Tc Th 5d'))
-
-    with pytest.raises(ConflictingCards):
-        is_bluffcandidate(holecards('Ac 5d'), flop('Tc Tc 4s'))
-
-    with pytest.raises(ValueError):
-        is_onepair(holecards('Ac'), flop('Tc Th 5d'))
-
-
-def test_is_onepair():
-    assert is_onepair(holecards('2c 4h'), flop('Tc Th 5d'), required_holecards=0)
-    assert is_onepair(holecards('2c Th'), flop('Tc 4h 5d'), required_holecards=1)
-    assert is_onepair(holecards('2c 2h'), flop('Ac Kh Qd'), required_holecards=2)
-    assert not is_onepair(holecards('2c 4h'), flop('5c Jh Qd'), required_holecards=0)
-    assert not is_onepair(holecards('4c Ah'), flop('5c 5h Qd'), required_holecards=1)
-    assert not is_onepair(holecards('2c 4c'), flop('5c 5h Qd'), required_holecards=2)
-
-
-def test_is_3straight():
-    assert is_3straight(holecards('2c 4h'), flop('Tc Jh Qd'), required_holecards=0)
-    assert is_3straight(holecards('2c Th'), flop('3c Jh Qd'), required_holecards=1)
-    assert is_3straight(holecards('2c 3h'), flop('4c Jh Qd'), required_holecards=2)
-    assert not is_3straight(holecards('2c 4h'), flop('5c Jh Qd'), required_holecards=0)
-    assert not is_3straight(holecards('2c 4h'), flop('5c Jh Qd'), required_holecards=1)
-    assert not is_3straight(holecards('2c 4c'), flop('5c Jh Ad'), required_holecards=2)
-
-
-def test_is_3flush():
-    assert is_3flush(holecards('2c 4h'), flop('Td Jd Qd'), required_holecards=0)
-    assert is_3flush(holecards('2c Th'), flop('3h Jh Qd'), required_holecards=1)
-    assert is_3flush(holecards('2d 4d'), flop('5d Jh Qh'), required_holecards=2)
-    assert not is_3flush(holecards('2c 4c'), flop('Ts Jh Qd'), required_holecards=0)
-    assert not is_3flush(holecards('2c Th'), flop('3c Jh Qd'), required_holecards=1)
-    assert not is_3flush(holecards('2c 4c'), flop('5s Jh Qd'), required_holecards=2)
 
 
 def test_is_bluffcandidate():

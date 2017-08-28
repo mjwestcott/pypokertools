@@ -7,7 +7,8 @@ namedtuple is used to represent cards.
 """
 import random
 from collections import namedtuple, Counter
-from itertools import combinations, permutations
+from itertools import chain, combinations, permutations
+from functools import wraps
 
 
 SUITS = "cdhs"
@@ -133,10 +134,6 @@ HOLECARDS = _make_holecards_dict()
 CANONICAL_HOLECARDS = {k: HOLECARDS[k] for k in CANONICAL_HOLECARDS_NAMES}
 
 
-#------------------------------------------------------------------------------
-# Utils
-
-
 def cards_from_str(names):
     """
     Given a string with space-separated card names, return
@@ -151,6 +148,33 @@ def cards_from_str(names):
 # These aliases allow us to create tuples of cards easily, while also describing
 # the intended use. They constitute the main interface provided by this module.
 holecards = flop = hand = cards_from_str
+
+
+
+
+#------------------------------------------------------------------------------
+# Utils
+
+
+class ConflictingCards(Exception):
+    pass
+
+
+def five_cards(f):
+    """
+    A decorator to check that a function is passed exactly five cards
+    in its positional arguments.
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        cards = tuple(chain(*args))
+        n = len(cards)
+        if n != 5:
+            raise ValueError("Exactly five cards must be passed to {}".format(f.__name__))
+        if n != len(set(cards)):
+            raise ConflictingCards("Conflicting cards passed to {}: {}".format(f.__name__, cards))
+        return f(*args, **kwargs)
+    return wrapper
 
 
 def make_deck():
