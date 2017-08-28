@@ -15,9 +15,9 @@ holecards.
 
 In this module you will find functions to find hands which satisfy these three
 properties:
+    - they do not have a pair or better (unless it's only on the board).
     - they have three-to-a-flush using both hole cards,
     - they have three-to-a-straight using both hole cards, and
-    - they do not have a pair or better.
 Expert poker players will recognise these as good candidates to use as bluffs.
 """
 from collections import Counter
@@ -26,13 +26,10 @@ from itertools import chain
 
 from pokertools import (
     CANONICAL_HOLECARDS,
-    sorted_count_of_values,
     sorted_numerical_ranks,
-    num_suits,
 )
 from properties.hand import is_onepair as hand_is_onepair
 from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
-from properties.flop import has_pair as flop_has_pair
 from properties.holecards import is_pair as is_pocket_pair
 
 
@@ -162,11 +159,18 @@ def is_bluffcandidate(holecards, flop):
         - not(pair-or-better) using at least one holecard
         - three-to-a-flush using both hole cards
         - three-to-a-straight using both hole cards
+
+    Example:
+        >>> from pokertools import cards_from_str
+        >>> holecards = flop = cards_from_str
+        >>> assert holecards('Qd Jd') in set(get_bluffcandidates(flop('Kc 2d 2h')))
+        >>> assert holecards('8s 7s') in set(get_bluffcandidates(flop('9c 4s 3d')))
+        >>> assert holecards('Kc Jc') in set(get_bluffcandidates(flop('Qc 8d 3h')))
     """
     hand = tuple(chain(holecards, flop))
     return (
-        not hand_is_twopair_or_better(hand)
-        and not is_onepair(holecards, flop, required_holecards=1)
+        not is_onepair(holecards, flop, required_holecards=1)
+        and not hand_is_twopair_or_better(hand)
         and is_3flush(holecards, flop, required_holecards=2)
         and is_3straight(holecards, flop, required_holecards=2)
     )
