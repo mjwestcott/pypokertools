@@ -39,8 +39,8 @@ def is_bluffcandidate(holecards, flop):
     )
 
 
-def get_bluffcandidates(flop):
-    for holecards in CANONICAL_HOLECARDS.values():
+def get_bluffcandidates(flop, range=None):
+    for holecards in range or CANONICAL_HOLECARDS.values():
         try:
             if is_bluffcandidate(holecards, flop):
                 yield holecards
