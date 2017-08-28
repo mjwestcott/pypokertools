@@ -106,6 +106,7 @@ def has_two_overcards(holecards, flop):
     """
     hand = tuple(chain(holecards, flop))
     flop_ranks = sorted_numerical_ranks(flop)
+
     return all(
         all(card.numerical_rank > r for r in flop_ranks)
         for card in holecards
