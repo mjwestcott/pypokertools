@@ -25,6 +25,7 @@ CARD_NAMES = [
     for r in reversed(RANKS)
     for s in SUITS
 ]
+
 # A list of 2652 strings in the form ["Ac Kc", "Ac Qc", ..., "3s 2s"]
 HOLECARDS_NAMES = [
     "{} {}".format(c1, c2)
@@ -32,6 +33,7 @@ HOLECARDS_NAMES = [
     for c2 in CARD_NAMES
     if c1 != c2
 ]
+
 # Sometimes -- e.g. for the purpose of storing a range of holecards --
 # position-isomorphs are irrelevant; "Ah Kc" is the same as "Kc Ah".
 # We prefer to former: it's first card has the higher rank.
