@@ -15,15 +15,17 @@ from itertools import combinations, permutations
 
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"
+NUMERICAL_RANKS = range(2, 15)
 NUM_CARDS = 52
 
-# A list of 52 strings in the form ["2c", "3c", 4c", ..., "As"]
+# A list of 52 strings in the form ["Ac", "Ad", Ah", ..., "2s"]
+# ordered by highest rank.
 CARD_NAMES = [
     "{}{}".format(r, s)
+    for r in reversed(RANKS)
     for s in SUITS
-    for r in RANKS
 ]
-# A list of 2652 strings in the form ["2c 3c", "2c 4c", ..., "As Ks"]
+# A list of 2652 strings in the form ["Ac Kc", "Ac Qc", ..., "3s 2s"]
 HOLECARDS_NAMES = [
     "{} {}".format(c1, c2)
     for c1 in CARD_NAMES
@@ -31,15 +33,16 @@ HOLECARDS_NAMES = [
     if c1 != c2
 ]
 # Sometimes -- e.g. for the purpose of storing a range of holecards --
-# position-isomorphs are irrelevant; "Ah Kc" is the same as "Kc Ah"
+# position-isomorphs are irrelevant; "Ah Kc" is the same as "Kc Ah".
+# We prefer to former: it's first card has the higher rank.
 CANONICAL_HOLECARDS_NAMES = {
     "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
     for i in range(NUM_CARDS)
     for j in range(i+1, NUM_CARDS)
 }
 
-RANK_STR_TO_NUM = dict(zip(RANKS, range(2, 15)))
-RANK_NUM_TO_STR = dict(zip(range(2, 15), RANKS))
+RANK_STR_TO_NUM = dict(zip(RANKS, NUMERICAL_RANKS))
+RANK_NUM_TO_STR = dict(zip(NUMERICAL_RANKS, RANKS))
 
 SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
 SUIT_COMBINATIONS = list(combinations(SUITS, r=2))

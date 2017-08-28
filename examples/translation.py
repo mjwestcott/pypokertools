@@ -24,8 +24,6 @@ Note: we will take position-isomorphs into account. "Ac Kc" is identical to
 "Kc Ac" and we only want to to produce one of them. This will simplify and
 reduce the space requirements of storing ranges of holecards.
 """
-# TODO: doctests should include real output, improve docstrings
-
 import re
 from collections import namedtuple
 from itertools import chain
@@ -101,8 +99,8 @@ def process_one_name(stove_name):
             ]
         elif suit_mark == "o":
             return [
-                "{}{} {}{}".format(rank1, suit1, rank2, suit1)
-                for (suit1, sui2) in SUIT_PERMUATIONS
+                "{}{} {}{}".format(rank1, suit1, rank2, suit2)
+                for suit1, suit2 in SUIT_PERMUATIONS
             ]
         else:
             raise TokeniserError("incorrect suit_mark in stove_name: {}".format(stove_name))
@@ -110,8 +108,8 @@ def process_one_name(stove_name):
         rank1, rank2 = stove_name
         if rank1 == rank2:
             return [
-                "{}{} {}{}".format(rank1, suit1, rank2, suit1)
-                for (suit1, sui2) in SUIT_COMBINATIONS
+                "{}{} {}{}".format(rank1, suit1, rank2, suit2)
+                for suit1, suit2 in SUIT_COMBINATIONS
             ]
         else:
             raise TokeniserError("rank1 != rank2 in stove_name: {}".format(stove_name))

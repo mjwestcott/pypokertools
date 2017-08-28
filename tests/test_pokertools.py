@@ -3,6 +3,8 @@ from pokertools import (
     CARD_NAMES,
     HOLECARDS,
     HOLECARDS_NAMES,
+    CANONICAL_HOLECARDS,
+    CANONICAL_HOLECARDS_NAMES,
     make_deck,
     deal,
 )
@@ -11,6 +13,7 @@ from pokertools import (
 def test_pokertools():
     assert len(CARDS) == len(CARD_NAMES) == 52
     assert len(HOLECARDS) == len(HOLECARDS_NAMES) == 2652
+    assert len(CANONICAL_HOLECARDS) == len(CANONICAL_HOLECARDS_NAMES) == 1326
 
     seven_clubs = CARDS['7c']
     assert seven_clubs.name == '7c'
