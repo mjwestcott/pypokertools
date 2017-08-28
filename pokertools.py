@@ -188,3 +188,20 @@ def sorted_numerical_ranks(cards):
 
 def num_suits(cards):
     return len(set(card.suit for card in cards))
+
+
+def rank_subsequences(hand):
+    """
+    Given a five-card hand, generate all three-length subsequences of the ranks
+    accounting for the fact that an Ace can play low (as rank 1 as well as 14).
+    """
+    ranks = sorted_numerical_ranks(hand)
+    for i in range(3):
+        yield ranks[i:i + 3]
+
+    # Special case for Ace playing low
+    a, b, c, d, e = ranks
+    if e == 14:
+        ranks = [1, a, b, c, d]
+        for i in range(3):
+            yield ranks[i:i + 3]

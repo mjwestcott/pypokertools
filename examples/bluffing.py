@@ -24,7 +24,7 @@ from collections import Counter
 from functools import wraps
 from itertools import chain
 
-from pokertools import CANONICAL_HOLECARDS, sorted_numerical_ranks
+from pokertools import CANONICAL_HOLECARDS, sorted_numerical_ranks, rank_subsequences
 from properties.hand import is_onepair as hand_is_onepair
 from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
 from properties.holecards import is_pair as is_pocket_pair
@@ -33,12 +33,8 @@ from properties.holecards import is_pair as is_pocket_pair
 #------------------------------------------------------------------------------
 # Complex Hand Propeties
 #
-# In this section it is important to keep track of our holecards. As a
-# result, these functions accept two positional arguments:
-#     - holecards, a tuple of two cards
-#     - flop, a tuple of three cards
-# We can use this decorator to ensure that these arguments, when flattened
-# by itertools.chain, comprise exactly five non-conflicting cards.
+# This module provides predicates of the combination (holecards, flop) -- in
+# particular, we are interested in the holecards in the context of the flop.
 
 
 class ConflictingCards(Exception):
@@ -92,21 +88,16 @@ def is_3straight(holecards, flop, required_holecards=2):
     three of the five total cards that is consecutive in rank.
     """
     assert 0 <= required_holecards <= 2
-
     rank1, rank2 = sorted_numerical_ranks(holecards)
     hand = tuple(chain(holecards, flop))
-    ranks = sorted_numerical_ranks(hand)
 
-    def subseqs():
-        for i in range(len(ranks) - 2):
-            yield ranks[i:i + 3]
-        a, b, _, _, c = ranks  # Special case for Ace playing low
-        if [a, b, c] == [2, 3, 14]:
-            yield [a, b, c]
-
-    for subseq in subseqs():
+    for subseq in rank_subsequences(hand):
         x, y, z = subseq
-        if x == y-1 == z-2 or [x, y, z] == [2, 3, 14]:
+        if x == y-1 == z-2:
+            if x == 1:
+                # Special case for Ace playing low, to allow
+                # for the `rank in subseq` check to work
+                subseq.append(14)
             if required_holecards == 2:
                 if rank1 in subseq and rank2 in subseq:
                     return True
@@ -126,7 +117,6 @@ def is_3flush(holecards, flop, required_holecards=2):
     three of the five total cards which have the same suit.
     """
     assert 0 <= required_holecards <= 2
-
     suit1, suit2 = [card.suit for card in holecards]
     hand = tuple(chain(holecards, flop))
     suit_counts = Counter([card.suit for card in hand])
