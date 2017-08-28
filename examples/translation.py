@@ -179,13 +179,13 @@ def process_one_token(token):
         raise TokeniserError("unexpected token: {}".format(token))
 
 
-def process_whole_string(text):
+def translate(text):
     """
     Translates a string of PokerStove-style names of holecards into the
     corresponding string of names from CANONICAL_HOLECARDS_NAMES.
 
     >>> stove_string = "JJ+, 66-22, A5s-A2s, Q9s+, J9s+, 8d7d, ATo+, KTo+"
-    >>> len(process_whole_string(stove_string))
+    >>> len(translate(stove_string))
     175
     """
     all_holecards = []
