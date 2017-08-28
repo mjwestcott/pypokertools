@@ -9,9 +9,6 @@ import random
 from collections import namedtuple, Counter
 from itertools import combinations, permutations
 
-#------------------------------------------------------------------------------
-# Constants
-
 
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"
@@ -48,10 +45,6 @@ RANK_NUM_TO_STR = dict(zip(NUMERICAL_RANKS, RANKS))
 
 SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
 SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
-
-
-#------------------------------------------------------------------------------
-# Classes
 
 
 class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):

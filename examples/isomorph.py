@@ -20,11 +20,10 @@ Finally, you will find a way to map the suits on the current flop to the suits
 on its canonical version. This will allow us to translate the rest of the
 current scenario, including our holecards.
 """
-# TODO: Think about the best way to scale to turn/river
-
 from itertools import combinations
 
 from pokertools import CARDS, SUITS
+
 
 #------------------------------------------------------------------------------
 # Finding the Canonical Version
@@ -120,6 +119,7 @@ def get_all_canonicals():
     all_possible_flops = combinations(CARDS.values(), r=3)
     return set(tuple(get_canonical(flop)) for flop in all_possible_flops)
 
+
 #------------------------------------------------------------------------------
 # Suit-Isomorphs
 
@@ -202,6 +202,7 @@ def get_suit_isomorphs(flop):
             for A in SUITS for B in SUITS for C in SUITS
             if (A != B and B != C and A != C)
         ]
+
 
 #------------------------------------------------------------------------------
 # Translation Dict

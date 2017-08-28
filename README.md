@@ -16,10 +16,11 @@ properties (e.g. having 'three-to-a-straight' and 'two overcards') rather than
 
 ## In this repository
 
-- pokertools.py: building custom containers of cards and hands
-- bluffing.py: finding nuanced flop hand properties for bluffing
-- translation.py: parsing PokerStove-style card notation using a tokeniser
-- isomorph.py: working with suit isomorphisms on the flop
+- pokertools.py: providing the basic building block: a Card type
+- properties: many predicates of tuples of cards, e.g. is_twopair, is_rainbow
+- examples/bluffing.py: finding nuanced flop hand properties for bluffing
+- examples/translation.py: parsing PokerStove-style card notation using a tokeniser
+- examples/isomorph.py: working with suit isomorphisms on the flop
 
 ## A Note on Terminology
 

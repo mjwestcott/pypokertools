@@ -142,6 +142,7 @@ def is_3flush(holecards, flop, required_holecards=2):
                 return True
     return False
 
+
 #------------------------------------------------------------------------------
 # Bluff Candidates
 
@@ -158,7 +159,7 @@ def is_bluffcandidate(holecards, flop):
         - three-to-a-straight using both hole cards
 
     Example:
-        >>> from pokertools import flop, holecards
+        >>> from pokertools import holecards, flop
         >>> assert holecards('Qd Jd') in get_bluffcandidates(flop('Kc 2d 2h'))
         >>> assert holecards('8s 7s') in get_bluffcandidates(flop('9c 4s 3d'))
         >>> assert holecards('Kc Jc') in get_bluffcandidates(flop('Qc 8d 3h'))
