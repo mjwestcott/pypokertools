@@ -150,8 +150,6 @@ def cards_from_str(names):
 holecards = flop = hand = cards_from_str
 
 
-
-
 #------------------------------------------------------------------------------
 # Utils
 
