@@ -29,14 +29,13 @@ from collections import namedtuple
 from itertools import chain
 
 from pokertools import (
-    CARD_NAMES,
     CANONICAL_HOLECARDS_NAMES,
-    NUM_CARDS,
     SUITS,
     SUIT_PERMUATIONS,
     SUIT_COMBINATIONS,
     get_numerical_rank,
-    get_string_rank
+    get_string_rank,
+    holecards,
 )
 
 
@@ -185,18 +184,17 @@ def translate(text):
     corresponding string of names from CANONICAL_HOLECARDS_NAMES.
 
     >>> stove_string = "JJ+, 66-22, A5s-A2s, Q9s+, J9s+, 8d7d, ATo+, KTo+"
-    >>> len(translate(stove_string))
+    >>> len(list(translate(stove_string)))
     175
     """
-    all_holecards = []
     tokens = list(generate_tokens(master_pat, text))
     errors = [t for t in tokens if t.type == "CATCHALL"]
     if errors:
         raise TokeniserError("unexpected tokens: {}".format(errors))
-
     for token in tokens:
         if token.type != "SEPERATOR":
-            all_holecards.append(process_one_token(token))
+            yield from (canonise(name) for name in process_one_token(token))
 
-    all_holecards = list(chain.from_iterable(all_holecards))
-    return [canonise(name) for name in all_holecards]
+
+def to_cards(text):
+    return [holecards(name) for name in translate(text)]

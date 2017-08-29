@@ -1,4 +1,5 @@
-from examples.translation import translate
+from pokertools import holecards
+from examples.translation import translate, to_cards
 
 
 def test_translation():
@@ -27,5 +28,14 @@ def test_translation():
         "22+, A2s+, K2s+, Q2s+, J6s+, T6s+, 96s+, 86s+, 75s+, 64s+, "
         "54s, A2o+, K9o+, Q9o+, J9o+, T8o+, 98o, 87o"
     )
-    result = translate(button_opening_range)
+    result = list(translate(button_opening_range))
     assert len(result) == 586
+
+
+def test_to_cards():
+    assert set(to_cards("T9s")) == {
+        holecards("Tc 9c"),
+        holecards("Td 9d"),
+        holecards("Th 9h"),
+        holecards("Ts 9s"),
+    }
