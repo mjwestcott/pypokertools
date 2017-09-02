@@ -47,8 +47,10 @@ RANK_NUM_TO_STR = dict(zip(NUMERICAL_RANKS, RANKS))
 SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
 SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
 
+FLOP_NAMES = ["{} {} {}".format(*x) for x in combinations(CARD_NAMES, r=3)]
 
-class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
+
+class Card(namedtuple("Card", ["name", "numerical_rank"])):
     """
     A playing card.
 
@@ -65,6 +67,14 @@ class Card(namedtuple("Card", ["name", "rank", "suit", "numerical_rank"])):
         11
     """
     __slots__ = ()
+
+    @property
+    def rank(self):
+        return self.name[0]
+
+    @property
+    def suit(self):
+        return self.name[1]
 
     # We want the sorting of cards to follow the conventions of poker,
     # according to which cards are compared by their numerical rank. When they
@@ -103,13 +113,11 @@ get_numerical_rank = RANK_STR_TO_NUM.__getitem__
 
 
 def _make_cards_dict():
-    ranks = [n[0] for n in CARD_NAMES]
-    suits = [n[1] for n in CARD_NAMES]
-    numerical_ranks = [get_numerical_rank(r) for r in ranks]
+    numerical_ranks = [get_numerical_rank(name[0]) for name in CARD_NAMES]
     return {
-        name: Card(name, rank, suit, numerical_rank)
-        for name, rank, suit, numerical_rank
-        in zip(CARD_NAMES, ranks, suits, numerical_ranks)
+        name: Card(name, numerical_rank)
+        for name, numerical_rank
+        in zip(CARD_NAMES, numerical_ranks)
     }
 
 
@@ -173,6 +181,19 @@ def five_cards(f):
             raise ConflictingCards("Conflicting cards passed to {}: {}".format(f.__name__, cards))
         return f(*args, **kwargs)
     return wrapper
+
+
+def remove_conflicts(iterable):
+    """
+    Given an iterable of (holcards, flop), filter out hands with conflicts.
+    """
+    for holecards, flop in iterable:
+        if len(set(chain(holecards, flop))) == 5:
+            yield holecards, flop
+
+
+def no_conflicts(holecards, flop):
+    return len(set(chain(holecards, flop))) == 5
 
 
 def make_deck():
