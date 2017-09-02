@@ -8,7 +8,7 @@ namedtuple is used to represent cards.
 import random
 from collections import namedtuple, Counter
 from itertools import chain, combinations, permutations
-from functools import wraps
+from functools import lru_cache, wraps
 
 
 SUITS = "cdhs"
@@ -187,9 +187,13 @@ def deal(deck, n=1):
     return tuple(deck.pop() for _ in range(n))
 
 
+memoize = lru_cache(maxsize=None)
+
+
+@memoize
 def sorted_count_of_values(cards):
     """
-    Takes a list of pokertools.Card objects and returns a sorted
+    Takes a tuple of pokertools.Card objects and returns a sorted
     list of counts of the card ranks.
 
     For example, consider this hand:
@@ -204,14 +208,17 @@ def sorted_count_of_values(cards):
     return sorted(Counter(list_of_ranks).values(), reverse=True)
 
 
+@memoize
 def sorted_numerical_ranks(cards):
     return sorted([card.numerical_rank for card in cards])
 
 
+@memoize
 def num_suits(cards):
     return len(set(card.suit for card in cards))
 
 
+@memoize
 def rank_subsequences(hand):
     """
     Given a five-card hand, generate all three-length subsequences of the ranks
