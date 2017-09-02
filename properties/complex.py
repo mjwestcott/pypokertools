@@ -18,6 +18,7 @@ from itertools import chain
 
 from pokertools import five_cards, sorted_numerical_ranks, rank_subsequences
 from properties.hand import is_onepair as hand_is_onepair
+from properties.flop import has_pair as flop_has_pair
 
 
 @five_cards
@@ -32,12 +33,9 @@ def is_onepair(holecards, flop, exclude_board=True):
     hand = tuple(chain(holecards, flop))
 
     if exclude_board:
-        # We must use at least one of our holecards
-        rank1, rank2 = sorted_numerical_ranks(holecards)
-        rank_counts = Counter([card.numerical_rank for card in hand])
         return (
             hand_is_onepair(hand)
-            and rank_counts[rank1] == 2 or rank_counts[rank2] == 2
+            and not flop_has_pair(flop)
         )
     else:
         return hand_is_onepair(hand)
