@@ -33,10 +33,7 @@ def is_onepair(holecards, flop, exclude_board=True):
     hand = tuple(chain(holecards, flop))
 
     if exclude_board:
-        return (
-            hand_is_onepair(hand)
-            and not flop_has_pair(flop)
-        )
+        return hand_is_onepair(hand) and not flop_has_pair(flop)
     else:
         return hand_is_onepair(hand)
 
