@@ -33,7 +33,7 @@ HOLECARDS_NAMES = [
 
 # Sometimes -- e.g. for the purpose of storing a range of holecards --
 # position-isomorphs are irrelevant; "Ah Kc" is the same as "Kc Ah".
-# We prefer to former: it's first card has the higher rank.
+# We prefer the former: it's first card has the higher rank.
 CANONICAL_HOLECARDS_NAMES = {
     "{} {}".format(CARD_NAMES[i], CARD_NAMES[j])
     for i in range(NUM_CARDS)
