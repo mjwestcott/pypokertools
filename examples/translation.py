@@ -30,14 +30,13 @@ from itertools import chain
 
 from pokertools import (
     CANONICAL_HOLECARDS_NAMES,
-    SUITS,
-    SUIT_PERMUATIONS,
     SUIT_COMBINATIONS,
+    SUIT_PERMUATIONS,
+    SUITS,
     get_numerical_rank,
     get_string_rank,
     holecards,
 )
-
 
 #------------------------------------------------------------------------------
 # Tokeniser

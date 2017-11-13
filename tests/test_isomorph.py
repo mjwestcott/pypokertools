@@ -1,5 +1,9 @@
+from examples.isomorph import (
+    get_all_canonicals,
+    get_canonical,
+    get_translation_dict,
+)
 from pokertools import cards_from_str as flop
-from examples.isomorph import get_canonical, get_all_canonicals, get_translation_dict
 
 
 def test_isomorph():

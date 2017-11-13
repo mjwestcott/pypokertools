@@ -1,11 +1,11 @@
 import pytest
 
-from pokertools import flop, holecards, ConflictingCards
+from pokertools import ConflictingCards, flop, holecards
 from properties.complex import (
-    is_onepair,
-    is_3straight,
-    is_3flush,
     has_two_overcards,
+    is_3flush,
+    is_3straight,
+    is_onepair,
 )
 
 

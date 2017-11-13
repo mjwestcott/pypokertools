@@ -16,9 +16,9 @@ holecards.
 from collections import Counter
 from itertools import chain
 
-from pokertools import five_cards, sorted_numerical_ranks, rank_subsequences
-from properties.hand import is_onepair as hand_is_onepair
+from pokertools import five_cards, rank_subsequences, sorted_numerical_ranks
 from properties.flop import has_pair as flop_has_pair
+from properties.hand import is_onepair as hand_is_onepair
 
 
 @five_cards

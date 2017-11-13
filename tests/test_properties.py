@@ -1,34 +1,33 @@
-from pokertools import hand, flop, holecards
-from properties.hand import (
-    is_straightflush,
-    is_fourofakind,
-    is_fullhouse,
-    is_flush,
-    is_straight,
-    is_threeofakind,
-    is_twopair,
-    is_onepair,
-    is_nopair,
-    is_pair_or_better,
-    is_twopair_or_better,
-)
+from pokertools import flop, hand, holecards
 from properties.flop import (
-    is_rainbow,
-    is_monotone,
+    has_2flush,
+    has_3straight,
+    has_gutshot,
     has_pair,
     has_threeofakind,
-    has_3straight,
-    has_2flush,
-    has_gutshot,
+    is_monotone,
+    is_rainbow,
 )
-from properties.holecards import(
-    is_pair,
-    is_suited,
-    is_connected,
+from properties.hand import (
+    is_flush,
+    is_fourofakind,
+    is_fullhouse,
+    is_nopair,
+    is_onepair,
+    is_pair_or_better,
+    is_straight,
+    is_straightflush,
+    is_threeofakind,
+    is_twopair,
+    is_twopair_or_better,
+)
+from properties.holecards import (
     has_one_gap,
     has_two_gap,
+    is_connected,
+    is_pair,
+    is_suited,
 )
-
 
 #------------------------------------------------------------------------------
 # Hand properties

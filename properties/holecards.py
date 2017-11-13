@@ -1,7 +1,7 @@
 from pokertools import (
+    num_suits,
     sorted_count_of_values,
     sorted_numerical_ranks,
-    num_suits,
 )
 
 #------------------------------------------------------------------------------

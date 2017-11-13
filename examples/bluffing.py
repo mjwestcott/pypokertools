@@ -8,9 +8,9 @@ Expert poker players will recognise these as good candidates to use as bluffs.
 """
 from itertools import chain
 
-from pokertools import ConflictingCards, CANONICAL_HOLECARDS, five_cards
+from pokertools import CANONICAL_HOLECARDS, ConflictingCards, five_cards
+from properties.complex import is_3flush, is_3straight, is_onepair
 from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
-from properties.complex import is_onepair, is_3flush, is_3straight
 
 
 @five_cards

@@ -1,5 +1,5 @@
+from examples.translation import to_cards, translate
 from pokertools import holecards
-from examples.translation import translate, to_cards
 
 
 def test_translation():

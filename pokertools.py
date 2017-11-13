@@ -6,10 +6,9 @@ To create a convenient API for interactive analysis, a subclass of
 namedtuple is used to represent cards.
 """
 import random
-from collections import namedtuple, Counter
-from itertools import chain, combinations, permutations
+from collections import Counter, namedtuple
 from functools import lru_cache, wraps
-
+from itertools import chain, combinations, permutations
 
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"

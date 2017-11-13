@@ -1,12 +1,12 @@
 from pokertools import (
-    CARDS,
-    CARD_NAMES,
-    HOLECARDS,
-    HOLECARDS_NAMES,
     CANONICAL_HOLECARDS,
     CANONICAL_HOLECARDS_NAMES,
-    make_deck,
+    CARD_NAMES,
+    CARDS,
+    HOLECARDS,
+    HOLECARDS_NAMES,
     deal,
+    make_deck,
 )
 
 
