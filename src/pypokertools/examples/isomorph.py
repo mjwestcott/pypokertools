@@ -22,7 +22,7 @@ current scenario, including our holecards.
 """
 from itertools import combinations
 
-from pokertools import CARDS, SUITS
+from pypokertools.pokertools import CARDS, SUITS
 
 #------------------------------------------------------------------------------
 # Finding the Canonical Version

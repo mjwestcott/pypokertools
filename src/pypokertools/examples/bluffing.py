@@ -8,9 +8,9 @@ Expert poker players will recognise these as good candidates to use as bluffs.
 """
 from itertools import chain
 
-from pokertools import CANONICAL_HOLECARDS, ConflictingCards, five_cards
-from properties.complex import is_3flush, is_3straight, is_onepair
-from properties.hand import is_twopair_or_better as hand_is_twopair_or_better
+from pypokertools.pokertools import CANONICAL_HOLECARDS, ConflictingCards, five_cards
+from pypokertools.properties.complex import is_3flush, is_3straight, is_onepair
+from pypokertools.properties.hand import is_twopair_or_better as hand_is_twopair_or_better
 
 
 @five_cards
@@ -25,7 +25,7 @@ def is_bluffcandidate(holecards, flop):
         - three-to-a-straight using both hole cards
 
     Example:
-        >>> from pokertools import holecards, flop
+        >>> from src.pypokertools.pokertools import holecards, flop
         >>> assert holecards('Qd Jd') in get_bluffcandidates(flop('Kc 2d 2h'))
         >>> assert holecards('8s 7s') in get_bluffcandidates(flop('9c 4s 3d'))
         >>> assert holecards('Kc Jc') in get_bluffcandidates(flop('Qc 8d 3h'))

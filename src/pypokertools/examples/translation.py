@@ -28,10 +28,10 @@ import re
 from collections import namedtuple
 from itertools import chain
 
-from pokertools import (
+from pypokertools.pokertools import (
     CANONICAL_HOLECARDS_NAMES,
     SUIT_COMBINATIONS,
-    SUIT_PERMUATIONS,
+    SUIT_PERMUTATIONS,
     SUITS,
     get_numerical_rank,
     get_string_rank,
@@ -98,7 +98,7 @@ def process_one_name(stove_name):
         elif suit_mark == "o":
             return [
                 "{}{} {}{}".format(rank1, suit1, rank2, suit2)
-                for suit1, suit2 in SUIT_PERMUATIONS
+                for suit1, suit2 in SUIT_PERMUTATIONS
             ]
         else:
             raise TokeniserError("incorrect suit_mark in stove_name: {}".format(stove_name))

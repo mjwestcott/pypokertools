@@ -1,9 +1,9 @@
-from examples.isomorph import (
+from src.pypokertools.examples.isomorph import (
     get_all_canonicals,
     get_canonical,
     get_translation_dict,
 )
-from pokertools import cards_from_str as flop
+from src.pypokertools.pokertools import cards_from_str as flop
 
 
 def test_isomorph():

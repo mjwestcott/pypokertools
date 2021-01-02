@@ -1,7 +1,7 @@
 import pytest
 
-from pokertools import ConflictingCards, flop, holecards
-from properties.complex import (
+from src.pypokertools.pokertools import ConflictingCards, flop, holecards
+from src.pypokertools.properties.complex import (
     has_two_overcards,
     is_3flush,
     is_3straight,

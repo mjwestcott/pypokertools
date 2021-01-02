@@ -43,7 +43,7 @@ CANONICAL_HOLECARDS_NAMES = {
 RANK_STR_TO_NUM = dict(zip(RANKS, NUMERICAL_RANKS))
 RANK_NUM_TO_STR = dict(zip(NUMERICAL_RANKS, RANKS))
 
-SUIT_PERMUATIONS = list(permutations(SUITS, r=2))
+SUIT_PERMUTATIONS = list(permutations(SUITS, r=2))
 SUIT_COMBINATIONS = list(combinations(SUITS, r=2))
 
 FLOP_NAMES = ["{} {} {}".format(*x) for x in combinations(CARD_NAMES, r=3)]
@@ -54,10 +54,10 @@ class Card(namedtuple("Card", ["name", "numerical_rank"])):
     A playing card.
 
     Attributes:
-        name (str): e.g. "Kh", "2s", etc. Satisfies the regex [2-9TJQKA][cdhs]
-        rank (str): e.g. "K", "2", etc. Equivalent to name[0]
-        suit (str): e.g. "c", "d", etc. Equivalent to name[1]
-        numerical_rank (int): Values 2-14; a numerical equivalent of its rank
+        Card.name (str): eg. "Kh", "2s", etc. Satisfies the regex [2-9TJQKA][cdhs]
+        Card.rank (str): eg. "K", "2", etc. Equivalent to name[0]
+        Card.suit (str): eg. "c", "d", etc. Equivalent to name[1]
+        Card.numerical_rank (int): Values 2-14; a numerical equivalent of its rank
 
     Examples:
         >>> CARDS["As"]
@@ -103,7 +103,7 @@ class Card(namedtuple("Card", ["name", "numerical_rank"])):
         return "<Card: {}>".format(self.name)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Making the Containers
 
 
@@ -129,8 +129,8 @@ def _make_holecards_dict():
         if x != y
     ]
     return {
-        name: holecards
-        for name, holecards
+        name: holecards_
+        for name, holecards_
         in zip(HOLECARDS_NAMES, holecards_list)
     }
 
@@ -139,6 +139,14 @@ def _make_holecards_dict():
 CARDS = _make_cards_dict()
 HOLECARDS = _make_holecards_dict()
 CANONICAL_HOLECARDS = {k: HOLECARDS[k] for k in CANONICAL_HOLECARDS_NAMES}
+
+# 1326 canonical holecards ordered in a PioSolver manner,
+# eg. obtained by show_hand_order command sent to PioSolver
+PIO_HOLECARDS_ORDER = sorted([tuple(sorted(holecard, reverse=True))
+                              for holecard in CANONICAL_HOLECARDS.values()
+                              ])
+
+PIO_HOLECARDS_INDICES = {holecard: i for i, holecard in enumerate(PIO_HOLECARDS_ORDER)}
 
 
 def cards_from_str(names):
@@ -157,7 +165,7 @@ def cards_from_str(names):
 holecards = flop = hand = cards_from_str
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Utils
 
 
@@ -184,15 +192,15 @@ def five_cards(f):
 
 def remove_conflicts(iterable):
     """
-    Given an iterable of (holcards, flop), filter out hands with conflicts.
+    Given an iterable of (holecards, flop), filter out hands with conflicts.
     """
-    for holecards, flop in iterable:
-        if len(set(chain(holecards, flop))) == 5:
-            yield holecards, flop
+    for holecards_, flop_ in iterable:
+        if len(set(chain(holecards_, flop_))) == 5:
+            yield holecards_, flop_
 
 
-def no_conflicts(holecards, flop):
-    return len(set(chain(holecards, flop))) == 5
+def no_conflicts(holecards_, flop_):
+    return len(set(chain(holecards_, flop_))) == 5
 
 
 def make_deck():
@@ -239,12 +247,12 @@ def num_suits(cards):
 
 
 @memoize
-def rank_subsequences(hand):
+def rank_subsequences(hand_):
     """
     Given a five-card hand, generate all three-length subsequences of the ranks
     accounting for the fact that an Ace can play low (as rank 1 as well as 14).
     """
-    ranks = sorted_numerical_ranks(hand)
+    ranks = sorted_numerical_ranks(hand_)
     for i in range(3):
         yield ranks[i:i + 3]
 

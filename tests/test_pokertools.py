@@ -1,4 +1,4 @@
-from pokertools import (
+from src.pypokertools.pokertools import (
     CANONICAL_HOLECARDS,
     CANONICAL_HOLECARDS_NAMES,
     CARD_NAMES,
