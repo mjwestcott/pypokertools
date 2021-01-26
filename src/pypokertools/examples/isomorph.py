@@ -284,3 +284,32 @@ def get_translation_dict(flop):
             suit3: canon3,                   # suit of 3rd card = 3rd canon
             unused[0]: canonical_unused[0],  # The remaining suits.
         }
+
+
+def translate_holecards(flop, holecards):
+    """
+    Returns holecards which suits are translated accordingly to the relation
+     between flop and canonical_flop. This 'translation' is got from the
+     get_translation_dict(flop) method.
+
+    >>> flop = (CARDS['6h'], CARDS['2d'], CARDS['Qd'])
+    >>> get_canonical(flop)
+    (<Card: 2c>, <Card: 6d>, <Card: Qc>)
+    >>> get_translation_dict(flop)
+    {'c': 'h', 'd': 'c', 'h': 'd', 's': 's'}
+    >>> holecards = (CARDS['2c'], CARDS['Ad'])
+    >>> translate_holecards(flop, holecards)
+    (<Card: 2h>, <Card: Ac>)
+
+    :param Tuple[Card, Card, Card] flop: tuple of first 3 board cards
+    :param Tuple[Card, Card] holecards: tuple of 2 holecards
+    :rtype Tuple[Card, Card]
+    :return: tuple of 2 translated holecards
+    """
+    translation = get_translation_dict(flop)
+    translated_holecards = []
+
+    for holecard in holecards:
+        translated_holecards.append(CARDS[f"{holecard.rank}{translation[holecard.suit]}"])
+
+    return tuple(translated_holecards)
