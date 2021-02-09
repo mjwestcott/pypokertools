@@ -313,3 +313,30 @@ def translate_holecards(flop, holecards):
         translated_holecards.append(CARDS[f"{holecard.rank}{translation[holecard.suit]}"])
 
     return tuple(translated_holecards)
+
+
+def translate_board(board):
+    """
+    Returns board which suits are translated accordingly to the relation
+     between flop and canonical_flop. This 'translation' is got from the
+     get_translation_dict(flop) method.
+
+    >>> board = (CARDS['6h'], CARDS['2d'], CARDS['Qd'], CARDS['Qs'], CARDS['Ah'])
+    >>> get_canonical(board[:3])
+    (<Card: 2c>, <Card: 6d>, <Card: Qc>)
+    >>> get_translation_dict(board[:3])
+    {'c': 'h', 'd': 'c', 'h': 'd', 's': 's'}
+    >>> translate_board(board)
+    (<Card: 2h>, <Card: Ac>)
+
+    :param Tuple[Card] board: tuple of all board cards
+    :rtype Tuple[Card]
+    :return: tuple of translated all board cards
+    """
+    translation = get_translation_dict(board[:3])
+    translated_board = []
+
+    for card in board:
+        translated_board.append(CARDS[f"{card.rank}{translation[card.suit]}"])
+
+    return tuple(translated_board)
