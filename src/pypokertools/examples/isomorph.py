@@ -271,7 +271,7 @@ def get_translation_dict(flop):
         # suit pattern is 'ABA'
         return {
             suit1: canon1,                   # suit of 1st card = 1st canon
-            suit2: canon2,                   # suit of 2nd card = 2nd canon
+            suit2: canon3,                   # suit of 2nd card = 2nd canon
             unused[0]: canonical_unused[0],  # Must be the remaining two
             unused[1]: canonical_unused[1],  # suits of each set
         }
