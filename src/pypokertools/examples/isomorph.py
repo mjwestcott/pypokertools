@@ -230,11 +230,13 @@ def get_translation_dict(flop):
     if (suit1, suit2, suit3) == (canon1, canon2, canon3):
         return {"c": "c", "d": "d", "h": "h", "s": "s"}
 
+    canonical_used = {canon1, canon2, canon3}
     unused = {"h", "d", "c", "s"} - {suit1, suit2, suit3}
     canonical_unused = {"h", "d", "c", "s"} - {canon1, canon2, canon3}
     both_unused = unused & canonical_unused
 
     # listed for indexing the elements, sorted for deterministic output
+    canonical_used = sorted(list(canonical_used))
     unused = sorted(list(unused))
     canonical_unused = sorted(list(canonical_unused))
     both_unused = sorted(list(both_unused))
@@ -269,9 +271,10 @@ def get_translation_dict(flop):
     # Note the order of cards
     elif suit1 == suit3 != suit2:
         # suit pattern is 'ABA'
+        canonical_used.remove(canon1)
         return {
             suit1: canon1,                   # suit of 1st card = 1st canon
-            suit2: canon3,                   # suit of 2nd card = 2nd canon
+            suit2: canonical_used[0],        # suit of 2nd card = other used canonical
             unused[0]: canonical_unused[0],  # Must be the remaining two
             unused[1]: canonical_unused[1],  # suits of each set
         }
