@@ -27,3 +27,8 @@ def test_isomorph():
     assert get_translation_dict(flop('Kc 2h 2c')) == {'c': 'c', 'd': 'h', 'h': 'd', 's': 's'}
     assert translate_holecards(flop('Kc 2h 2c'), holecards('Ac 9s')) == holecards('Ac 9s')
     assert translate_board(board('Kc 2h 2c Kh 3d')) == board('Kc 2d 2c Kd 3h')
+    
+    assert get_canonical(flop('5s 8h As')) == flop('5c 8d Ac')
+    assert get_translation_dict(flop('5s 8h As')) == {'c': 'h', 'd': 's', 'h': 'd', 's': 'c'}
+    assert translate_holecards(flop('5s 8h As'), holecards('Ac Jc')) == holecards('Ah Jh')
+    assert translate_board(board('5s 8h As 2h Th')) == board('5c 8d Ac 2d Td')
