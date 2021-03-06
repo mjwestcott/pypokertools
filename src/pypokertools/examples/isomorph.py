@@ -221,7 +221,7 @@ def get_translation_dict(flop):
     True
     """
     flop = sorted(flop)
-    suit1, suit2, suit3 = [card.suit for card in flop]
+    (rank1, suit1), (rank2, suit2), (rank3, suit3) = [(card.rank, card.suit) for card in flop]
 
     canonical_flop = get_canonical(flop)
     canon1, canon2, canon3 = [card.suit for card in canonical_flop]
@@ -261,12 +261,26 @@ def get_translation_dict(flop):
 
     elif suit1 != suit2 == suit3:
         # suit pattern is 'ABB'
-        return {
-            suit1: canon1,                   # suit of 1st card = 1st canon
-            suit2: canon2,                   # suit of 2nd card = 2nd canon
-            unused[0]: canonical_unused[0],  # Must be the remaining two
-            unused[1]: canonical_unused[1],  # suits of each set
-        }
+        if rank1 == rank2:
+            # Special case: if the 1st and 2nd cards are a pair e.g. flop is
+            # [2c, 2d, 8d], that is isomorphic with those cards being switched
+            # e.g. [2d, 2c, 8d] -- which forms the suit pattern already
+            # covered above: 'ABA'. Thus, it can be transformed to [2c, 2d, 8c].
+            # This version has higher priority lexicographically -- it has more
+            # clubs!
+            return {
+                suit1: canon2,                   # suit of 1st card = 2nd canon
+                suit2: canon1,                   # suit of 2nd card = 1st canon
+                unused[0]: canonical_unused[0],  # Must be the remaining two
+                unused[1]: canonical_unused[1],  # suits of each set
+            }
+        else:
+            return {
+                suit1: canon1,                   # suit of 1st card = 1st canon
+                suit2: canon2,                   # suit of 2nd card = 2nd canon
+                unused[0]: canonical_unused[0],  # Must be the remaining two
+                unused[1]: canonical_unused[1],  # suits of each set
+            }
 
     # Note the order of cards
     elif suit1 == suit3 != suit2:
