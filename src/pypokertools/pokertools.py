@@ -102,6 +102,34 @@ class Card(namedtuple("Card", ["name", "numerical_rank"])):
     def __repr__(self):
         return "<Card: {}>".format(self.name)
 
+    def pretty_print(self):
+        if self.suit == 'c':
+            unicode_suit = '\u2663'
+        elif self.suit == 'd':
+            unicode_suit = '\u2666'
+        elif self.suit == 'h':
+            unicode_suit = '\u2665'
+        else:
+            unicode_suit = '\u2660'
+
+        return f"{self.rank}{unicode_suit}"
+
+    def color_pretty_print(self):
+        if self.suit == 'c':
+            unicode_suit = '\u2663'
+            color = 'green'
+        elif self.suit == 'd':
+            unicode_suit = '\u2666'
+            color = 'blue'
+        elif self.suit == 'h':
+            unicode_suit = '\u2665'
+            color = 'red'
+        else:
+            unicode_suit = '\u2660'
+            color = 'black'
+
+        return f"<font color=\"{color}\">{self.rank}{unicode_suit}</font>"
+
 
 # ------------------------------------------------------------------------------
 # Making the Containers
