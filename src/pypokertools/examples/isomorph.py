@@ -313,7 +313,7 @@ def translate_holecards(flop, holecards):
     >>> get_canonical(flop)
     (<Card: 2c>, <Card: 6d>, <Card: Qc>)
     >>> get_translation_dict(flop)
-    {'c': 'h', 'd': 'c', 'h': 'd', 's': 's'}
+    {'d': 'c', 'h': 'd', 'c': 'h', 's': 's'}
     >>> holecards = (CARDS['2c'], CARDS['Ad'])
     >>> translate_holecards(flop, holecards)
     (<Card: 2h>, <Card: Ac>)
@@ -342,9 +342,9 @@ def translate_board(board):
     >>> get_canonical(board[:3])
     (<Card: 2c>, <Card: 6d>, <Card: Qc>)
     >>> get_translation_dict(board[:3])
-    {'c': 'h', 'd': 'c', 'h': 'd', 's': 's'}
+    {'d': 'c', 'h': 'd', 'c': 'h', 's': 's'}
     >>> translate_board(board)
-    (<Card: 2h>, <Card: Ac>)
+    (<Card: 6d>, <Card: 2c>, <Card: Qc>, <Card: Qs>, <Card: Ad>)
 
     :param Tuple[Card] board: tuple of all board cards
     :rtype Tuple[Card]
