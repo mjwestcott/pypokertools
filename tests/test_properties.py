@@ -1,5 +1,5 @@
-from src.pypokertools.pokertools import flop, hand, holecards
-from src.pypokertools.properties.flop import (
+from pypokertools.pokertools import flop, hand, holecards
+from pypokertools.properties.flop import (
     has_2flush,
     has_3straight,
     has_gutshot,
@@ -8,7 +8,7 @@ from src.pypokertools.properties.flop import (
     is_monotone,
     is_rainbow,
 )
-from src.pypokertools.properties.hand import (
+from pypokertools.properties.hand import (
     is_flush,
     is_fourofakind,
     is_fullhouse,
@@ -21,7 +21,7 @@ from src.pypokertools.properties.hand import (
     is_twopair,
     is_twopair_or_better,
 )
-from src.pypokertools.properties.holecards import (
+from pypokertools.properties.holecards import (
     has_one_gap,
     has_two_gap,
     is_connected,

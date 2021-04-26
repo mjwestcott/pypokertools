@@ -1,7 +1,7 @@
 import pytest
 
-from src.pypokertools.pokertools import ConflictingCards, flop, holecards
-from src.pypokertools.properties.complex import (
+from pypokertools.pokertools import ConflictingCards, flop, holecards
+from pypokertools.properties.complex import (
     has_two_overcards,
     is_3flush,
     is_3straight,
@@ -10,6 +10,9 @@ from src.pypokertools.properties.complex import (
 
 
 def test_five_cards_decorator():
+    with pytest.raises(ConflictingCards):
+        raise ConflictingCards
+
     with pytest.raises(ConflictingCards):
         is_onepair(holecards('Ac Ac'), flop('Tc Th 5d'))
 

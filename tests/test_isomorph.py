@@ -1,13 +1,13 @@
-from src.pypokertools.examples.isomorph import (
+from pypokertools.examples.isomorph import (
     get_all_canonicals,
     get_canonical,
     get_translation_dict,
     translate_holecards,
     translate_board,
 )
-from src.pypokertools.pokertools import cards_from_str as flop
-from src.pypokertools.pokertools import cards_from_str as board
-from src.pypokertools.pokertools import cards_from_str as holecards
+from pypokertools.pokertools import cards_from_str as flop
+from pypokertools.pokertools import cards_from_str as board
+from pypokertools.pokertools import cards_from_str as holecards
 
 
 def test_isomorph():
