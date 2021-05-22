@@ -1,3 +1,4 @@
+LICENSE.txt
 MANIFEST.in
 README.md
 setup.cfg
@@ -25,3 +26,10 @@ tests/test_isomorph.py
 tests/test_pokertools.py
 tests/test_properties.py
 tests/test_translation.py
+tests/__pycache__/__init__.cpython-38.pyc
+tests/__pycache__/test_bluffing.cpython-38-pytest-6.1.2.pyc
+tests/__pycache__/test_complex.cpython-38-pytest-6.1.2.pyc
+tests/__pycache__/test_isomorph.cpython-38-pytest-6.1.2.pyc
+tests/__pycache__/test_pokertools.cpython-38-pytest-6.1.2.pyc
+tests/__pycache__/test_properties.cpython-38-pytest-6.1.2.pyc
+tests/__pycache__/test_translation.cpython-38-pytest-6.1.2.pyc
