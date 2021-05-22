@@ -24,7 +24,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ab192917-de93-4968-97b6-c3ac4a57ef72" name="Default Changelist" comment="" />
+    <list default="true" id="ab192917-de93-4968-97b6-c3ac4a57ef72" name="Default Changelist" comment="updated requirements.txt" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,6 +94,14 @@
       <option name="presentableId" value="Default" />
       <updated>1604869817039</updated>
     </task>
+    <task id="LOCAL-00001" summary="updated requirements.txt">
+      <created>1621724755606</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1621724755606</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,31 +116,9 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="1346" y="378" key="#Inspections" timestamp="1604870171160">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1346" y="378" key="#Inspections/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604870171160" />
-    <state x="1458" y="524" key="#Notifications" timestamp="1604870344303">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1458" y="524" key="#Notifications/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604870344303" />
-    <state x="1174" y="355" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604870412079">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1174" y="355" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604870412079" />
-    <state x="1471" y="502" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604871377613">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1471" y="502" key="#com.intellij.fileTypes.FileTypeChooser/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604871377613" />
-    <state x="1500" y="441" key="FileChooserDialogImpl" timestamp="1604871904818">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1500" y="441" key="FileChooserDialogImpl/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604871904818" />
-    <state x="1221" y="345" key="SettingsEditor" timestamp="1604870913396">
-      <screen x="0" y="0" width="3440" height="1400" />
-    </state>
-    <state x="1221" y="345" key="SettingsEditor/0.0.3440.1400/-1440.-1134.1440.2520/3440.-1135.1440.2520@0.0.3440.1400" timestamp="1604870913396" />
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updated requirements.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated requirements.txt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
