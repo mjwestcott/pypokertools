@@ -228,7 +228,13 @@ def remove_conflicts(iterable):
 
 
 def no_conflicts(holecards_, flop_):
-    return len(set(chain(holecards_, flop_))) == 5
+    """
+    Checks if there are no conflicting cards among given iterables.
+    :param holecards_: iterable of holecards Card items
+    :param flop_: iterable of flop or generally board Card items
+    :return: Returns true if there are no conflicting cards.
+    """
+    return len(set(chain(holecards_, flop_))) == len(list(chain(holecards_, flop_)))
 
 
 def make_deck():
