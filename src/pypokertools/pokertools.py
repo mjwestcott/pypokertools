@@ -9,6 +9,7 @@ import random
 from collections import Counter, namedtuple
 from functools import lru_cache, wraps
 from itertools import chain, combinations, permutations
+from typing import Dict, Tuple
 
 SUITS = "cdhs"
 RANKS = "23456789TJQKA"
@@ -139,7 +140,7 @@ get_string_rank = RANK_NUM_TO_STR.__getitem__
 get_numerical_rank = RANK_STR_TO_NUM.__getitem__
 
 
-def _make_cards_dict():
+def _make_cards_dict() -> Dict[str, Card]:
     numerical_ranks = [get_numerical_rank(name[0]) for name in CARD_NAMES]
     return {
         name: Card(name, numerical_rank)
@@ -164,8 +165,8 @@ def _make_holecards_dict():
 
 
 # Accessible by string name, e.g. CARDS["As"], HOLECARDS["Ah Jh"]
-CARDS = _make_cards_dict()
-HOLECARDS = _make_holecards_dict()
+CARDS: Dict[str, Card] = _make_cards_dict()
+HOLECARDS: Dict[str, Tuple[Card, Card]] = _make_holecards_dict()
 CANONICAL_HOLECARDS = {k: HOLECARDS[k] for k in CANONICAL_HOLECARDS_NAMES}
 
 # 1326 canonical holecards ordered in a PioSolver manner,
