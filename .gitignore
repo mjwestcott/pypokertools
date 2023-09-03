@@ -11,3 +11,6 @@ __pycache__/
 
 # virtual env
 venv/
+
+# pycharm
+.idea/
